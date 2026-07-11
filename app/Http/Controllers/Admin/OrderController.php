@@ -84,6 +84,21 @@ class OrderController extends Controller
         return back()->with('status', 'Order status updated successfully.');
     }
 
+    public function updatePaymentStatus(Request $request, Order $order): RedirectResponse
+    {
+        if ($order->payment_method !== 'cod') {
+            abort(403, 'Payment status can only be changed manually for COD orders.');
+        }
+
+        $validated = $request->validate([
+            'payment_status' => ['required', Rule::in(Order::PAYMENT_STATUSES)],
+        ]);
+
+        $order->update(['payment_status' => $validated['payment_status']]);
+
+        return back()->with('status', 'Payment status updated successfully.');
+    }
+
     public function invoice(Order $order): Response
     {
         return Invoice::forOrder($order)->download(Invoice::filename($order));

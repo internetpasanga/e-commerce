@@ -51,17 +51,23 @@
     }
 
     document.addEventListener('click', function (event) {
-        var btn = event.target.closest('[data-action="toggle-wishlist"]');
-        if (!btn) {
+        var trigger = event.target.closest('[data-action="toggle-wishlist"]');
+        if (!trigger) {
             return;
         }
 
-        var productId = btn.dataset.productId;
+        var productId = trigger.dataset.productId;
         if (!productId) {
             return;
         }
 
-        btn.disabled = true;
+        // A product can have more than one toggle button on the same page
+        // (e.g. the heart overlay on the card image and the labeled button
+        // in the card actions) - keep them all in sync.
+        var buttons = document.querySelectorAll('[data-action="toggle-wishlist"][data-product-id="' + productId + '"]');
+        buttons.forEach(function (b) {
+            b.disabled = true;
+        });
 
         fetch('/wishlist/' + productId, {
             method: 'POST',
@@ -72,25 +78,44 @@
             },
         })
             .then(function (res) {
+                if (!res.ok) {
+                    throw new Error('Request failed');
+                }
                 return res.json();
             })
             .then(function (body) {
                 updateWishlistCount(body.count);
                 showToast(body.message, 'success');
 
-                btn.classList.toggle('active', body.added);
+                buttons.forEach(function (b) {
+                    b.classList.toggle('active', body.added);
+                    b.setAttribute('aria-pressed', body.added ? 'true' : 'false');
 
-                var label = btn.querySelector('.wishlist-btn-label');
-                if (label) {
-                    label.textContent = body.added ? 'Remove from Wishlist' : 'Add to Wishlist';
-                }
+                    var label = b.querySelector('.wishlist-btn-label');
+                    if (label) {
+                        label.textContent = body.added
+                            ? (b.classList.contains('wishlist-btn-card') ? 'In Wishlist' : 'Remove from Wishlist')
+                            : 'Add to Wishlist';
+                    } else {
+                        b.setAttribute('aria-label', body.added ? 'Remove from wishlist' : 'Add to wishlist');
+                    }
+
+                    b.classList.remove('is-animating');
+                    void b.offsetWidth;
+                    b.classList.add('is-animating');
+                });
 
                 if (wishlistContainer) {
                     reloadWishlist();
                 }
             })
+            .catch(function () {
+                showToast('Something went wrong. Please try again.', 'error');
+            })
             .finally(function () {
-                btn.disabled = false;
+                buttons.forEach(function (b) {
+                    b.disabled = false;
+                });
             });
     });
 })();

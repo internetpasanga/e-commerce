@@ -26,7 +26,7 @@ class LegalContentSeeder extends Seeder
         return <<<'HTML'
             <p><em>Last updated: {{ last_updated }}</em></p>
 
-            <p>Welcome to Urban Basket. These Terms of Service ("Terms") govern your access to and use of our website and the purchase of products through it. By creating an account, placing an order, or otherwise using our site, you agree to be bound by these Terms. If you do not agree, please do not use our website.</p>
+            <p>Welcome to Sample E-Commerse. These Terms of Service ("Terms") govern your access to and use of our website and the purchase of products through it. By creating an account, placing an order, or otherwise using our site, you agree to be bound by these Terms. If you do not agree, please do not use our website.</p>
 
             <h3>1. Account Registration</h3>
             <p>To place an order, you'll need to create an account with a valid email address. You're responsible for keeping your login credentials confidential and for all activity that happens under your account. Please notify us immediately if you suspect any unauthorized use.</p>
@@ -52,10 +52,10 @@ class LegalContentSeeder extends Seeder
             <p>You agree not to misuse our website, including attempting to gain unauthorized access to our systems, interfering with the site's normal operation, or using the site for any unlawful purpose.</p>
 
             <h3>8. Intellectual Property</h3>
-            <p>All content on this website, including text, graphics, logos, and images, is the property of Urban Basket or its licensors and is protected by applicable intellectual property laws. You may not reproduce, distribute, or use this content without our prior written consent.</p>
+            <p>All content on this website, including text, graphics, logos, and images, is the property of Sample E-Commerse or its licensors and is protected by applicable intellectual property laws. You may not reproduce, distribute, or use this content without our prior written consent.</p>
 
             <h3>9. Limitation of Liability</h3>
-            <p>To the fullest extent permitted by law, Urban Basket shall not be liable for any indirect, incidental, or consequential damages arising from your use of our website or products purchased through it.</p>
+            <p>To the fullest extent permitted by law, Sample E-Commerse shall not be liable for any indirect, incidental, or consequential damages arising from your use of our website or products purchased through it.</p>
 
             <h3>10. Changes to These Terms</h3>
             <p>We may update these Terms from time to time. Continued use of our website after changes are posted constitutes your acceptance of the revised Terms.</p>
@@ -70,7 +70,7 @@ class LegalContentSeeder extends Seeder
         return <<<'HTML'
             <p><em>Last updated: {{ last_updated }}</em></p>
 
-            <p>This Privacy Policy explains how Urban Basket ("we", "us", "our") collects, uses, and protects your personal information when you use our website and services.</p>
+            <p>This Privacy Policy explains how Sample E-Commerse ("we", "us", "our") collects, uses, and protects your personal information when you use our website and services.</p>
 
             <h3>1. Information We Collect</h3>
             <ul>

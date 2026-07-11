@@ -11,6 +11,8 @@ class Order extends Model
 {
     public const STATUSES = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
 
+    public const PAYMENT_STATUSES = ['pending', 'paid'];
+
     protected $fillable = [
         'user_id',
         'order_number',

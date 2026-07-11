@@ -9,5 +9,8 @@
 
     @include('site.orders._order-detail')
 
-    <a href="{{ route('home') }}" class="btn btn-primary">Continue Shopping</a>
+    <div class="no-print" style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+        <button type="button" class="btn btn-secondary" onclick="window.print()">Print</button>
+        <a href="{{ route('home') }}" class="btn btn-primary">Continue Shopping</a>
+    </div>
 </x-layouts.site>

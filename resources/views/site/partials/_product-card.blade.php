@@ -30,8 +30,11 @@
         </div>
     </a>
 
-    <button type="button" class="wishlist-btn {{ \App\Support\Wishlist::has($product->id) ? 'active' : '' }}"
-            data-action="toggle-wishlist" data-product-id="{{ $product->id }}" aria-label="Toggle wishlist">
+    @php $inWishlist = \App\Support\Wishlist::has($product->id); @endphp
+    <button type="button" class="wishlist-btn {{ $inWishlist ? 'active' : '' }}"
+            data-action="toggle-wishlist" data-product-id="{{ $product->id }}"
+            aria-pressed="{{ $inWishlist ? 'true' : 'false' }}"
+            aria-label="{{ $inWishlist ? 'Remove from wishlist' : 'Add to wishlist' }}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
     </button>
 
@@ -40,6 +43,9 @@
                 data-product-id="{{ $product->id }}"
                 data-product-name="{{ $product->name }}"
                 {{ $product->stock <= 0 ? 'disabled' : '' }}>
+            @if ($product->stock > 0)
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            @endif
             {{ $product->stock > 0 ? 'Add to Cart' : 'Out of Stock' }}
         </button>
     </div>

@@ -8,8 +8,8 @@
     <div class="product-detail">
         <div>
             @if ($product->thumbnail)
-                <img src="{{ asset('storage/'.$product->thumbnail) }}" alt="{{ $product->name }}"
-                     class="product-detail-main-image" id="main-image">
+                <img src="{{ asset('storage/' . $product->thumbnail) }}" alt="{{ $product->name }}"
+                    class="product-detail-main-image" id="main-image">
             @else
                 <div class="product-detail-main-image"></div>
             @endif
@@ -17,12 +17,12 @@
             @if ($product->images->isNotEmpty())
                 <div class="product-detail-thumbs">
                     @if ($product->thumbnail)
-                        <img src="{{ asset('storage/'.$product->thumbnail) }}" alt="{{ $product->name }}"
-                             onclick="document.getElementById('main-image').src = this.src">
+                        <img src="{{ asset('storage/' . $product->thumbnail) }}" alt="{{ $product->name }}"
+                            onclick="document.getElementById('main-image').src = this.src">
                     @endif
                     @foreach ($product->images as $image)
-                        <img src="{{ asset('storage/'.$image->image) }}" alt="{{ $product->name }}"
-                             onclick="document.getElementById('main-image').src = this.src">
+                        <img src="{{ asset('storage/' . $image->image) }}" alt="{{ $product->name }}"
+                            onclick="document.getElementById('main-image').src = this.src">
                     @endforeach
                 </div>
             @endif
@@ -36,10 +36,12 @@
                 <p class="rating-summary">
                     <span class="rating-stars">
                         @for ($i = 1; $i <= 5; $i++)
-                            <span class="{{ $i <= round($product->averageRating()) ? 'star-filled' : 'star-empty' }}">&#9733;</span>
+                            <span
+                                class="{{ $i <= round($product->averageRating()) ? 'star-filled' : 'star-empty' }}">&#9733;</span>
                         @endfor
                     </span>
-                    {{ number_format($product->averageRating(), 1) }} ({{ $product->reviewsCount() }} {{ Str::plural('review', $product->reviewsCount()) }})
+                    {{ number_format($product->averageRating(), 1) }} ({{ $product->reviewsCount() }}
+                    {{ Str::plural('review', $product->reviewsCount()) }})
                 </p>
             @endif
 
@@ -56,29 +58,49 @@
             @else
                 <span class="stock-badge inline out-of-stock">Out of Stock</span>
             @endif
-
-            @php $inWishlist = \App\Support\Wishlist::has($product->id); @endphp
-            <button type="button" class="wishlist-btn-detail {{ $inWishlist ? 'active' : '' }}"
+            <div>
+                @php $inWishlist = \App\Support\Wishlist::has($product->id); @endphp
+                <button type="button" class="wishlist-btn-detail {{ $inWishlist ? 'active' : '' }}"
                     data-action="toggle-wishlist" data-product-id="{{ $product->id }}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                <span class="wishlist-btn-label">{{ $inWishlist ? 'Remove from Wishlist' : 'Add to Wishlist' }}</span>
-            </button>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                    <span
+                        class="wishlist-btn-label">{{ $inWishlist ? 'Remove from Wishlist' : 'Add to Wishlist' }}</span>
+                </button>
+            </div>
 
             @if ($product->stock > 0)
-                <div class="product-detail-purchase" data-product-id="{{ $product->id }}" data-product-stock="{{ $product->stock }}">
+                <div class="product-detail-purchase" data-product-id="{{ $product->id }}"
+                    data-product-stock="{{ $product->stock }}">
                     <div class="qty-stepper">
-                        <button type="button" class="qty-btn" data-action="qty-decrease" aria-label="Decrease quantity">&minus;</button>
-                        <input type="text" class="qty-input" id="quantity" value="1" inputmode="numeric" aria-label="Quantity">
-                        <button type="button" class="qty-btn" data-action="qty-increase" aria-label="Increase quantity">+</button>
+                        <button type="button" class="qty-btn" data-action="qty-decrease"
+                            aria-label="Decrease quantity">&minus;</button>
+                        <input type="text" class="qty-input" id="quantity" value="1" inputmode="numeric"
+                            aria-label="Quantity">
+                        <button type="button" class="qty-btn" data-action="qty-increase"
+                            aria-label="Increase quantity">+</button>
                     </div>
 
                     <div class="product-detail-actions">
-                        <button type="button" class="btn btn-primary btn-lg add-to-cart-btn" data-product-name="{{ $product->name }}">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                        <button type="button" class="btn btn-primary btn-lg add-to-cart-btn"
+                            data-product-name="{{ $product->name }}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="9" cy="21" r="1" />
+                                <circle cx="20" cy="21" r="1" />
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                            </svg>
                             Add to Cart
                         </button>
-                        <button type="button" class="btn btn-outline btn-lg buy-now-btn" data-product-name="{{ $product->name }}">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        <button type="button" class="btn btn-outline btn-lg buy-now-btn"
+                            data-product-name="{{ $product->name }}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                            </svg>
                             Buy Now
                         </button>
                     </div>
@@ -123,7 +145,8 @@
                             <span class="{{ $i <= $avgRounded ? 'star-filled' : 'star-empty' }}">&#9733;</span>
                         @endfor
                     </span>
-                    <span class="review-summary-count">{{ $product->reviewsCount() }} {{ Str::plural('review', $product->reviewsCount()) }}</span>
+                    <span class="review-summary-count">{{ $product->reviewsCount() }}
+                        {{ Str::plural('review', $product->reviewsCount()) }}</span>
                 </div>
 
                 <div class="review-summary-bars">
@@ -132,7 +155,8 @@
                         <div class="review-summary-bar-row">
                             <span class="review-summary-bar-label">{{ $star }}&#9733;</span>
                             <span class="review-summary-bar-track">
-                                <span class="review-summary-bar-fill" style="width: {{ $product->reviewsCount() ? round($starCount / $product->reviewsCount() * 100) : 0 }}%"></span>
+                                <span class="review-summary-bar-fill"
+                                    style="width: {{ $product->reviewsCount() ? round(($starCount / $product->reviewsCount()) * 100) : 0 }}%"></span>
                             </span>
                             <span class="review-summary-bar-count">{{ $starCount }}</span>
                         </div>
@@ -145,7 +169,8 @@
             <div class="review-list">
                 @foreach ($product->approvedReviews as $review)
                     <div class="review-item">
-                        <div class="review-item-avatar">{{ Str::of($review->user->name)->substr(0, 1)->upper() }}</div>
+                        <div class="review-item-avatar">{{ Str::of($review->user->name)->substr(0, 1)->upper() }}
+                        </div>
                         <div class="review-item-body">
                             <div class="review-item-header">
                                 <strong>{{ $review->user->name }}</strong>
@@ -153,7 +178,8 @@
                             </div>
                             <span class="rating-stars">
                                 @for ($i = 1; $i <= 5; $i++)
-                                    <span class="{{ $i <= $review->rating ? 'star-filled' : 'star-empty' }}">&#9733;</span>
+                                    <span
+                                        class="{{ $i <= $review->rating ? 'star-filled' : 'star-empty' }}">&#9733;</span>
                                 @endfor
                             </span>
                             <p class="review-item-comment">{{ $review->comment }}</p>
@@ -189,24 +215,34 @@
                         <div class="form-group">
                             <label class="form-label">Your Rating</label>
                             <div class="star-rating-input">
-                                <input type="radio" id="star5" name="rating" value="5" required {{ old('rating') == 5 ? 'checked' : '' }}>
+                                <input type="radio" id="star5" name="rating" value="5" required
+                                    {{ old('rating') == 5 ? 'checked' : '' }}>
                                 <label for="star5" title="5 stars">&#9733;</label>
-                                <input type="radio" id="star4" name="rating" value="4" {{ old('rating') == 4 ? 'checked' : '' }}>
+                                <input type="radio" id="star4" name="rating" value="4"
+                                    {{ old('rating') == 4 ? 'checked' : '' }}>
                                 <label for="star4" title="4 stars">&#9733;</label>
-                                <input type="radio" id="star3" name="rating" value="3" {{ old('rating') == 3 ? 'checked' : '' }}>
+                                <input type="radio" id="star3" name="rating" value="3"
+                                    {{ old('rating') == 3 ? 'checked' : '' }}>
                                 <label for="star3" title="3 stars">&#9733;</label>
-                                <input type="radio" id="star2" name="rating" value="2" {{ old('rating') == 2 ? 'checked' : '' }}>
+                                <input type="radio" id="star2" name="rating" value="2"
+                                    {{ old('rating') == 2 ? 'checked' : '' }}>
                                 <label for="star2" title="2 stars">&#9733;</label>
-                                <input type="radio" id="star1" name="rating" value="1" {{ old('rating') == 1 ? 'checked' : '' }}>
+                                <input type="radio" id="star1" name="rating" value="1"
+                                    {{ old('rating') == 1 ? 'checked' : '' }}>
                                 <label for="star1" title="1 star">&#9733;</label>
                             </div>
-                            @error('rating') <span class="field-error">{{ $message }}</span> @enderror
+                            @error('rating')
+                                <span class="field-error">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="form-group">
                             <label for="comment" class="form-label">Your Review</label>
-                            <textarea id="comment" name="comment" rows="4" class="form-control" required placeholder="Share your experience with this product&hellip;">{{ old('comment') }}</textarea>
-                            @error('comment') <span class="field-error">{{ $message }}</span> @enderror
+                            <textarea id="comment" name="comment" rows="4" class="form-control" required
+                                placeholder="Share your experience with this product&hellip;">{{ old('comment') }}</textarea>
+                            @error('comment')
+                                <span class="field-error">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <button type="submit" class="btn btn-primary">Submit Review</button>
@@ -219,21 +255,21 @@
             @endif
         @else
             <p class="muted"><a href="{{ route('login') }}">Log in</a> to write a review.</p>
-        @endif
-    </section>
-
-    @if ($relatedProducts->isNotEmpty())
-        <section class="related-products-section">
-            <h2 class="section-title">Related Products</h2>
-
-            <div class="product-grid">
-                @foreach ($relatedProducts as $relatedProduct)
-                    @include('site.partials._product-card', ['product' => $relatedProduct])
-                @endforeach
-            </div>
+            @endif
         </section>
-    @endif
 
-    <script src="{{ asset('js/cart.js') }}"></script>
-    <script src="{{ asset('js/wishlist.js') }}"></script>
-</x-layouts.site>
+        @if ($relatedProducts->isNotEmpty())
+            <section class="related-products-section">
+                <h2 class="section-title">Related Products</h2>
+
+                <div class="product-grid">
+                    @foreach ($relatedProducts as $relatedProduct)
+                        @include('site.partials._product-card', ['product' => $relatedProduct])
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
+        <script src="{{ asset('js/cart.js') }}"></script>
+        <script src="{{ asset('js/wishlist.js') }}"></script>
+    </x-layouts.site>

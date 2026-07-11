@@ -6,7 +6,8 @@
         </div>
         <div style="display: flex; align-items: center; gap: 0.75rem;">
             <span class="badge {{ \App\Models\Order::badgeClassForStatus($order->status) }}">{{ ucfirst($order->status) }}</span>
-            <a href="{{ route('admin.orders.invoice', $order) }}" class="btn btn-secondary btn-sm">Download Invoice</a>
+            <button type="button" class="btn btn-secondary btn-sm no-print" onclick="window.print()">Print</button>
+            <a href="{{ route('admin.orders.invoice', $order) }}" class="btn btn-secondary btn-sm no-print">Download Invoice</a>
         </div>
     </div>
 
@@ -77,14 +78,33 @@
     <section class="card">
         <h2 class="section-title">Payment</h2>
         <p>Method: {{ strtoupper($order->payment_method) }}</p>
-        <p>Status: {{ ucfirst($order->payment_status) }}</p>
+        <p>Status: <span class="badge {{ $order->payment_status === 'paid' ? 'badge-success' : 'badge-muted' }}">{{ ucfirst($order->payment_status) }}</span></p>
         @if ($order->razorpay_payment_id)
             <p>Razorpay Payment ID: {{ $order->razorpay_payment_id }}</p>
+        @endif
+
+        @if ($order->payment_method === 'cod')
+            <form method="POST" action="{{ route('admin.orders.payment-status.update', $order) }}" class="no-print" style="margin-top: 1rem;">
+                @csrf
+                @method('PUT')
+
+                <div class="form-group">
+                    <label for="payment_status" class="form-label">Update Payment Status</label>
+                    <select id="payment_status" name="payment_status" class="form-control">
+                        @foreach (\App\Models\Order::PAYMENT_STATUSES as $paymentStatus)
+                            <option value="{{ $paymentStatus }}" @selected(old('payment_status', $order->payment_status) === $paymentStatus)>{{ ucfirst($paymentStatus) }}</option>
+                        @endforeach
+                    </select>
+                    <small style="color: var(--text-muted);">Cash on Delivery orders aren't marked paid automatically &mdash; update this once the payment is collected.</small>
+                </div>
+
+                <button type="submit" class="btn btn-secondary">Update Payment Status</button>
+            </form>
         @endif
     </section>
 
     <div class="checkout-layout">
-        <section class="card">
+        <section class="card no-print">
             <h2 class="section-title">Update Status</h2>
 
             <form method="POST" action="{{ route('admin.orders.status.update', $order) }}">
@@ -172,7 +192,7 @@
         </div>
     </div>
 
-    <p style="margin-top: 1.5rem;">
+    <p class="no-print" style="margin-top: 1.5rem;">
         <a href="{{ route('admin.orders.index') }}">&larr; Back to Orders</a>
     </p>
 </x-layouts.admin>
