@@ -1,0 +1,215 @@
+@php
+    $siteName = $siteSettings['site_name'] ?? config('app.name');
+    $metaDescription = $siteSettings['meta_description'] ?? null;
+    $metaKeywords = $siteSettings['meta_keywords'] ?? null;
+    $primaryColor = $siteSettings['primary_color'] ?? '#4f46e5';
+    $secondaryColor = $siteSettings['secondary_color'] ?? '#64748b';
+    $hasContactBar = ! empty($siteSettings['email']) || ! empty($siteSettings['phone']);
+    $hasFooterContact = ! empty($siteSettings['email']) || ! empty($siteSettings['phone']) || ! empty($siteSettings['address']);
+    $hasSocial = ! empty($siteSettings['social_facebook']) || ! empty($siteSettings['social_instagram']) || ! empty($siteSettings['social_twitter']) || ! empty($siteSettings['social_youtube']);
+@endphp
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    @if ($metaDescription)
+        <meta name="description" content="{{ $metaDescription }}">
+    @endif
+    @if ($metaKeywords)
+        <meta name="keywords" content="{{ $metaKeywords }}">
+    @endif
+    <title>{{ isset($title) ? $title.' - '.$siteName : $siteName }}</title>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+</head>
+<body style="--site-primary: {{ $primaryColor }}; --site-secondary: {{ $secondaryColor }};">
+    @if ($hasContactBar)
+        <div class="site-topbar">
+            <div class="site-topbar-inner">
+                @if (! empty($siteSettings['phone']))
+                    <span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        {{ $siteSettings['phone'] }}
+                    </span>
+                @endif
+                @if (! empty($siteSettings['email']))
+                    <span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6 12 13 2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+                        {{ $siteSettings['email'] }}
+                    </span>
+                @endif
+            </div>
+        </div>
+    @endif
+
+    <header class="site-header">
+        <div class="site-header-inner">
+            <button type="button" class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">
+                <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+
+            <a href="{{ route('home') }}" class="site-brand">
+                @if (! empty($siteSettings['logo']))
+                    <img src="{{ asset('storage/'.$siteSettings['logo']) }}" alt="{{ $siteName }}" class="site-logo">
+                @else
+                    {{ $siteName }}
+                @endif
+            </a>
+
+            <nav class="site-nav" id="site-nav">
+                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
+                <a href="{{ route('about.index') }}" class="{{ request()->routeIs('about.index') ? 'active' : '' }}">About Us</a>
+                <a href="{{ route('shop.index') }}" class="{{ request()->routeIs('shop.index') ? 'active' : '' }}">Shop</a>
+                <a href="{{ route('faqs.index') }}" class="{{ request()->routeIs('faqs.index') ? 'active' : '' }}">FAQs</a>
+                <a href="{{ route('contact.index') }}" class="{{ request()->routeIs('contact.index') ? 'active' : '' }}">Contact Us</a>
+            </nav>
+
+            <form method="GET" action="{{ route('search.index') }}" class="site-search" role="search">
+                <input type="text" name="q" value="{{ request('q') }}" placeholder="Search products..." class="site-search-input" aria-label="Search products">
+                <button type="submit" class="site-search-btn" aria-label="Search">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                </button>
+            </form>
+
+            <div class="site-header-icons">
+                @auth
+                    <div class="user-menu" id="user-menu">
+                        <button type="button" class="user-menu-trigger" id="user-menu-trigger" aria-label="Account menu">
+                            @if (auth()->user()->avatar)
+                                <img src="{{ asset('storage/'.auth()->user()->avatar) }}" alt="" class="user-menu-avatar">
+                            @else
+                                <span class="user-menu-avatar">{{ Str::of(auth()->user()->name)->substr(0, 1)->upper() }}</span>
+                            @endif
+                        </button>
+
+                        <div class="user-menu-dropdown" id="user-menu-dropdown">
+                            <a href="{{ route('profile.edit') }}" class="user-menu-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+                                My Profile
+                            </a>
+                            <a href="{{ route('orders.index') }}" class="user-menu-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>
+                                My Orders
+                            </a>
+                            <a href="{{ route('addresses.index') }}" class="user-menu-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                My Address
+                            </a>
+                            <a href="{{ route('reviews.index') }}" class="user-menu-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                My Reviews
+                            </a>
+                            <a href="{{ route('profile.password.edit') }}" class="user-menu-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                Change Password
+                            </a>
+
+                            <div class="user-menu-divider"></div>
+
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="user-menu-item danger">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+                                    Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @else
+                    <a href="{{ route('login') }}" class="site-icon-link" aria-label="Login">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+                    </a>
+                @endauth
+
+                <a href="{{ route('wishlist.index') }}" class="site-icon-link" aria-label="Wishlist">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    <span class="site-icon-count" id="wishlist-count" style="{{ $wishlistCount > 0 ? '' : 'display: none;' }}">{{ $wishlistCount }}</span>
+                </a>
+
+                <a href="{{ route('cart.index') }}" class="site-icon-link" aria-label="Cart" style="margin-right:15px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    <span class="site-icon-count" id="cart-count" style="{{ $cartCount > 0 ? '' : 'display: none;' }}">{{ $cartCount }}</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="site-main">
+        {{ $slot }}
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-footer-inner">
+            <div class="site-footer-col site-footer-brand">
+                <a href="{{ route('home') }}" class="site-footer-brand-name">{{ $siteName }}</a>
+
+                @if ($hasSocial)
+                    <div class="site-footer-social">
+                        @if (! empty($siteSettings['social_facebook']))
+                            <a href="{{ $siteSettings['social_facebook'] }}" target="_blank" rel="noopener" aria-label="Facebook">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.77l-.44 2.89h-2.33v6.99A10 10 0 0 0 22 12z"/></svg>
+                            </a>
+                        @endif
+                        @if (! empty($siteSettings['social_instagram']))
+                            <a href="{{ $siteSettings['social_instagram'] }}" target="_blank" rel="noopener" aria-label="Instagram">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+                            </a>
+                        @endif
+                        @if (! empty($siteSettings['social_twitter']))
+                            <a href="{{ $siteSettings['social_twitter'] }}" target="_blank" rel="noopener" aria-label="Twitter">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 5.9c-.77.35-1.6.58-2.46.68a4.3 4.3 0 0 0 1.88-2.37 8.6 8.6 0 0 1-2.72 1.04 4.28 4.28 0 0 0-7.29 3.9A12.14 12.14 0 0 1 2.9 4.9a4.28 4.28 0 0 0 1.32 5.71c-.7-.02-1.36-.22-1.94-.53v.05a4.28 4.28 0 0 0 3.43 4.2c-.65.18-1.34.2-1.99.08a4.29 4.29 0 0 0 4 2.98A8.6 8.6 0 0 1 1 19.08a12.1 12.1 0 0 0 6.56 1.92c7.88 0 12.2-6.53 12.2-12.2 0-.19 0-.37-.01-.56A8.7 8.7 0 0 0 22 5.9z"/></svg>
+                            </a>
+                        @endif
+                        @if (! empty($siteSettings['social_youtube']))
+                            <a href="{{ $siteSettings['social_youtube'] }}" target="_blank" rel="noopener" aria-label="YouTube">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.6-.46-5.32a3 3 0 0 0-2.1-2.13C18.7 4 12 4 12 4s-6.7 0-8.44.55a3 3 0 0 0-2.1 2.13C1 8.4 1 12 1 12s0 3.6.46 5.32a3 3 0 0 0 2.1 2.13C5.3 20 12 20 12 20s6.7 0 8.44-.55a3 3 0 0 0 2.1-2.13C23 15.6 23 12 23 12z"/><path d="M9.75 15.5v-7l6 3.5-6 3.5z" fill="#111827"/></svg>
+                            </a>
+                        @endif
+                    </div>
+                @endif
+            </div>
+
+            @if ($navCategories->isNotEmpty())
+                <div class="site-footer-col">
+                    <h3 class="site-footer-heading">Shop</h3>
+                    @foreach ($navCategories as $navCategory)
+                        <a href="{{ route('category.show', $navCategory) }}" class="site-footer-link">{{ $navCategory->name }}</a>
+                    @endforeach
+                </div>
+            @endif
+
+            @if ($hasFooterContact)
+                <div class="site-footer-col">
+                    <h3 class="site-footer-heading">Contact</h3>
+                    @if (! empty($siteSettings['address']))
+                        <p class="site-footer-text">{{ $siteSettings['address'] }}</p>
+                    @endif
+                    @if (! empty($siteSettings['phone']))
+                        <p class="site-footer-text">{{ $siteSettings['phone'] }}</p>
+                    @endif
+                    @if (! empty($siteSettings['email']))
+                        <p class="site-footer-text">{{ $siteSettings['email'] }}</p>
+                    @endif
+                </div>
+            @endif
+
+            <div class="site-footer-col">
+                <h3 class="site-footer-heading">Legal</h3>
+                <a href="{{ route('terms.index') }}" class="site-footer-link">Terms of Service</a>
+                <a href="{{ route('privacy.index') }}" class="site-footer-link">Privacy Policy</a>
+            </div>
+        </div>
+
+        <div class="site-footer-bottom">
+            <span>&copy; {{ now()->year }} {{ $siteName }}. All rights reserved.</span>
+        </div>
+    </footer>
+
+    <div class="toast-stack" id="toast-stack"></div>
+
+    <script src="{{ asset('js/user-menu.js') }}"></script>
+    <script src="{{ asset('js/mobile-menu.js') }}"></script>
+</body>
+</html>

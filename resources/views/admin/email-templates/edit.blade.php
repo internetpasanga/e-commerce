@@ -1,0 +1,19 @@
+<x-layouts.admin title="Edit Email Template">
+    <h1 class="page-title">Edit Email Template</h1>
+
+    <div class="max-w-form-lg card">
+        <form method="POST" action="{{ route('admin.email-templates.update', $emailTemplate) }}">
+            @csrf
+            @method('PUT')
+
+            @include('admin.email-templates._form')
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a href="{{ route('admin.email-templates.index') }}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="{{ asset('js/rich-text-editor.js') }}"></script>
+</x-layouts.admin>
