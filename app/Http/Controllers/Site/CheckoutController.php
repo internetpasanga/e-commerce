@@ -32,7 +32,7 @@ class CheckoutController extends Controller
         $addresses = $request->user()->addresses()->orderByDesc('is_default')->latest()->get();
 
         if ($addresses->isEmpty()) {
-            return redirect()->route('addresses.create')->with('status', 'Please add an address before checking out.');
+            return redirect()->route('addresses.create', ['redirect' => 'checkout'])->with('status', 'Please add an address before checking out.');
         }
 
         $coupon = Coupon::resolveApplied($request, Cart::total());
