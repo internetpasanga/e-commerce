@@ -42,6 +42,7 @@ class CheckoutController extends Controller
             'addresses' => $addresses,
             'razorpayEnabled' => Razorpay::isConfigured(),
             'codEnabled' => Setting::get('cod_enabled', '1') !== '0',
+            'siteSettings' => Setting::allSettings(),
         ] + OrderTotals::forCart($coupon);
 
         return view('site.checkout.create', $data);

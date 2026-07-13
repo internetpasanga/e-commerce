@@ -127,6 +127,7 @@ svg {
 .btn-whatsapp {
     background: #25d366;
     color: #fff;
+    width: 100%;
 }
 
 .btn-whatsapp:hover:not(:disabled) {
@@ -3062,12 +3063,8 @@ td.text-right, th.text-right {
 }
 
 /* Site: Checkout */
-.checkout-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
+.checkout-whatsapp-support {
+    margin-top: 0.75rem;
 }
 
 .checkout-layout {

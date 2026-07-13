@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Models\Coupon;
 use App\Models\Product;
+use App\Models\Setting;
 use App\Support\Cart;
 use App\Support\OrderTotals;
 use Illuminate\Http\JsonResponse;
@@ -23,7 +24,7 @@ class CartController extends Controller
             return view('site.partials._cart-items', $data);
         }
 
-        return view('site.cart', $data);
+        return view('site.cart', $data + ['siteSettings' => Setting::allSettings()]);
     }
 
     public function store(Request $request, Product $product): JsonResponse
