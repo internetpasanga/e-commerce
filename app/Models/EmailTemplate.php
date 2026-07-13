@@ -42,6 +42,13 @@ class EmailTemplate extends Model
             $body = $default['body'] ?? '';
         }
 
+        $settings = Setting::allSettings();
+
+        $variables = array_merge([
+            'site_name' => $settings['site_name'] ?? config('app.name'),
+            'primary_color' => $settings['primary_color'] ?? '#4f46e5',
+        ], $variables);
+
         $replace = function (string $text) use ($variables): string {
             return preg_replace_callback('/\{\{\s*(\w+)\s*\}\}/', function ($matches) use ($variables) {
                 return $variables[$matches[1]] ?? $matches[0];

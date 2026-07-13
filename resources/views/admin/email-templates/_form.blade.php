@@ -45,7 +45,7 @@
     <label for="description" class="form-label">Description</label>
     <textarea id="description" name="description" rows="2" class="form-control">{{ old('description', $emailTemplate->description ?? '') }}</textarea>
     @error('description') <span class="field-error">{{ $message }}</span> @enderror
-    <small style="color: var(--text-muted);">Internal note listing the available double-curly-brace variables for this template (e.g. name, verification_url).</small>
+    <small style="color: var(--text-muted);">Internal note listing the available double-curly-brace variables for this template (e.g. name, verification_url). Note: @{{ site_name }} and @{{ primary_color }} are always available in every template.</small>
 </div>
 
 <div class="form-group">

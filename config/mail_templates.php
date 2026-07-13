@@ -5,50 +5,93 @@ return [
     'verify-email' => [
         'name' => 'Email Verification',
         'subject' => 'Verify your email address',
-        'description' => 'Sent when a customer registers. Available variables: {{ name }}, {{ verification_url }}',
+        'description' => 'Sent when a customer registers. Available variables: {{ name }}, {{ verification_url }}. Also available everywhere: {{ site_name }}, {{ primary_color }}.',
         'body' => <<<'HTML'
-            <p>Hi {{ name }},</p>
-            <p>Thanks for signing up! Please click the button below to verify your email address.</p>
-            <p><a href="{{ verification_url }}" style="display:inline-block;padding:10px 20px;background:#4f46e5;color:#fff;text-decoration:none;border-radius:6px;">Verify Email Address</a></p>
-            <p>If you did not create an account, no further action is required.</p>
+            <h2 style="margin:0 0 16px; font-size:20px; color:#101828;">Verify your email address</h2>
+            <p style="margin:0 0 16px;">Hi {{ name }},</p>
+            <p style="margin:0 0 24px;">Thanks for creating an account with {{ site_name }}! Please confirm this is your email address so we can activate your account.</p>
+            <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+                <tr>
+                    <td style="border-radius:8px; background-color:{{ primary_color }};">
+                        <a href="{{ verification_url }}" style="display:inline-block; padding:14px 32px; font-size:15px; font-weight:600; color:#ffffff; text-decoration:none; border-radius:8px;">Verify Email Address</a>
+                    </td>
+                </tr>
+            </table>
+            <p style="margin:0; font-size:13px; color:#667085;">If you did not create an account, no further action is required.</p>
             HTML,
     ],
 
     'reset-password' => [
         'name' => 'Password Reset',
         'subject' => 'Reset your password',
-        'description' => 'Sent when a customer requests a password reset. Available variables: {{ name }}, {{ reset_url }}',
+        'description' => 'Sent when a customer requests a password reset. Available variables: {{ name }}, {{ reset_url }}. Also available everywhere: {{ site_name }}, {{ primary_color }}.',
         'body' => <<<'HTML'
-            <p>Hi {{ name }},</p>
-            <p>You are receiving this email because we received a password reset request for your account.</p>
-            <p><a href="{{ reset_url }}" style="display:inline-block;padding:10px 20px;background:#4f46e5;color:#fff;text-decoration:none;border-radius:6px;">Reset Password</a></p>
-            <p>This password reset link will expire in 60 minutes. If you did not request a password reset, no further action is required.</p>
+            <h2 style="margin:0 0 16px; font-size:20px; color:#101828;">Reset your password</h2>
+            <p style="margin:0 0 16px;">Hi {{ name }},</p>
+            <p style="margin:0 0 24px;">We received a request to reset the password for your {{ site_name }} account. Click the button below to choose a new password.</p>
+            <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+                <tr>
+                    <td style="border-radius:8px; background-color:{{ primary_color }};">
+                        <a href="{{ reset_url }}" style="display:inline-block; padding:14px 32px; font-size:15px; font-weight:600; color:#ffffff; text-decoration:none; border-radius:8px;">Reset Password</a>
+                    </td>
+                </tr>
+            </table>
+            <p style="margin:0; font-size:13px; color:#667085;">This link will expire in 60 minutes. If you did not request a password reset, you can safely ignore this email.</p>
             HTML,
     ],
 
     'order-confirmation' => [
         'name' => 'Order Confirmation',
         'subject' => 'Your order {{ order_number }} has been placed!',
-        'description' => 'Sent when a customer places an order. Available variables: {{ name }}, {{ order_number }}, {{ grand_total }}, {{ order_url }}',
+        'description' => 'Sent when a customer places an order. Available variables: {{ name }}, {{ order_number }}, {{ grand_total }}, {{ order_url }}. Also available everywhere: {{ site_name }}, {{ primary_color }}.',
         'body' => <<<'HTML'
-            <p>Hi {{ name }},</p>
-            <p>Thank you for your order! We've received order <strong>{{ order_number }}</strong> and it's now being processed.</p>
-            <p><strong>Order Total: ₹{{ grand_total }}</strong></p>
-            <p><a href="{{ order_url }}" style="display:inline-block;padding:10px 20px;background:#4f46e5;color:#fff;text-decoration:none;border-radius:6px;">View Order</a></p>
-            <p>We'll let you know once your order ships.</p>
+            <h2 style="margin:0 0 16px; font-size:20px; color:#101828;">Thank you for your order!</h2>
+            <p style="margin:0 0 16px;">Hi {{ name }},</p>
+            <p style="margin:0 0 24px;">We've received your order and it's now being processed. Here's a quick summary:</p>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px; background-color:#f8f9fb; border-radius:8px;">
+                <tr>
+                    <td style="padding:16px 20px; font-size:14px; color:#344054;">Order Number</td>
+                    <td style="padding:16px 20px; font-size:14px; color:#101828; font-weight:600; text-align:right;">{{ order_number }}</td>
+                </tr>
+                <tr>
+                    <td style="padding:0 20px 16px; font-size:14px; color:#344054; border-top:1px solid #eef0f3;">Order Total</td>
+                    <td style="padding:0 20px 16px; font-size:14px; color:#101828; font-weight:600; text-align:right; border-top:1px solid #eef0f3;">₹{{ grand_total }}</td>
+                </tr>
+            </table>
+            <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+                <tr>
+                    <td style="border-radius:8px; background-color:{{ primary_color }};">
+                        <a href="{{ order_url }}" style="display:inline-block; padding:14px 32px; font-size:15px; font-weight:600; color:#ffffff; text-decoration:none; border-radius:8px;">View Order</a>
+                    </td>
+                </tr>
+            </table>
+            <p style="margin:0; font-size:13px; color:#667085;">We'll send you another email as soon as your order ships.</p>
             HTML,
     ],
 
     'contact-inquiry' => [
         'name' => 'Contact Inquiry Notification',
         'subject' => 'New contact inquiry from {{ name }}',
-        'description' => 'Sent to the store\'s contact email when a customer submits the Contact Us form. Available variables: {{ name }}, {{ email }}, {{ subject }}, {{ message }}',
+        'description' => 'Sent to the store\'s contact email when a customer submits the Contact Us form. Available variables: {{ name }}, {{ email }}, {{ subject }}, {{ message }}. Also available everywhere: {{ site_name }}, {{ primary_color }}.',
         'body' => <<<'HTML'
-            <p>You have received a new inquiry via the Contact Us form.</p>
-            <p><strong>Name:</strong> {{ name }}</p>
-            <p><strong>Email:</strong> {{ email }}</p>
-            <p><strong>Subject:</strong> {{ subject }}</p>
-            <p><strong>Message:</strong><br>{{ message }}</p>
+            <h2 style="margin:0 0 16px; font-size:20px; color:#101828;">New contact inquiry</h2>
+            <p style="margin:0 0 24px;">You've received a new message via the {{ site_name }} Contact Us form.</p>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 8px; background-color:#f8f9fb; border-radius:8px;">
+                <tr>
+                    <td style="padding:16px 20px; font-size:14px; color:#344054; width:120px;">Name</td>
+                    <td style="padding:16px 20px; font-size:14px; color:#101828; font-weight:600;">{{ name }}</td>
+                </tr>
+                <tr>
+                    <td style="padding:0 20px 16px; font-size:14px; color:#344054; border-top:1px solid #eef0f3;">Email</td>
+                    <td style="padding:0 20px 16px; font-size:14px; color:#101828; font-weight:600; border-top:1px solid #eef0f3;">{{ email }}</td>
+                </tr>
+                <tr>
+                    <td style="padding:0 20px 16px; font-size:14px; color:#344054; border-top:1px solid #eef0f3;">Subject</td>
+                    <td style="padding:0 20px 16px; font-size:14px; color:#101828; font-weight:600; border-top:1px solid #eef0f3;">{{ subject }}</td>
+                </tr>
+            </table>
+            <p style="margin:16px 0 0; font-size:14px; color:#344054;"><strong>Message:</strong></p>
+            <p style="margin:8px 0 0; font-size:14px; color:#101828; white-space:pre-line;">{{ message }}</p>
             HTML,
     ],
 
