@@ -41,6 +41,7 @@ class CheckoutController extends Controller
             'items' => $items,
             'addresses' => $addresses,
             'razorpayEnabled' => Razorpay::isConfigured(),
+            'codEnabled' => Setting::get('cod_enabled', '1') !== '0',
         ] + OrderTotals::forCart($coupon);
 
         return view('site.checkout.create', $data);
@@ -55,6 +56,10 @@ class CheckoutController extends Controller
             'billing_address_id' => ['nullable', 'integer'],
             'payment_method' => ['required', 'in:cod,razorpay'],
         ]);
+
+        if ($validated['payment_method'] === 'cod' && Setting::get('cod_enabled', '1') === '0') {
+            return back()->withErrors(['payment_method' => 'Cash on Delivery is currently unavailable. Please choose another payment method.']);
+        }
 
         if ($validated['payment_method'] === 'razorpay' && ! Razorpay::isConfigured()) {
             return back()->withErrors(['payment_method' => 'Online payment is currently unavailable. Please select Cash on Delivery.']);

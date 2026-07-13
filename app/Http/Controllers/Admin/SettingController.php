@@ -31,6 +31,7 @@ class SettingController extends Controller
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:30'],
             'address' => ['nullable', 'string', 'max:500'],
+            'whatsapp_number' => ['nullable', 'string', 'max:20'],
             'social_facebook' => ['nullable', 'url', 'max:255'],
             'social_instagram' => ['nullable', 'url', 'max:255'],
             'social_twitter' => ['nullable', 'url', 'max:255'],
@@ -44,6 +45,7 @@ class SettingController extends Controller
             'mail_from_address' => ['nullable', 'email', 'max:255'],
             'mail_from_name' => ['nullable', 'string', 'max:255'],
             'shipping_charge' => ['nullable', 'numeric', 'min:0'],
+            'cod_enabled' => ['nullable', 'boolean'],
             'razorpay_mode' => ['nullable', 'in:test,live'],
             'razorpay_test_key_id' => ['nullable', 'string', 'max:255'],
             'razorpay_test_key_secret' => ['nullable', 'string', 'max:255'],
@@ -87,6 +89,8 @@ class SettingController extends Controller
         if (! $request->filled('google_client_secret')) {
             unset($validated['google_client_secret']);
         }
+
+        $validated['cod_enabled'] = $request->boolean('cod_enabled') ? '1' : '0';
 
         foreach ($validated as $key => $value) {
             Setting::set($key, $value);

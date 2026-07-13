@@ -3,9 +3,9 @@
         $settingsTabFields = [
             'general' => ['site_name', 'logo', 'meta_title', 'meta_description', 'meta_keywords', 'primary_color', 'secondary_color'],
             'pages' => ['about_us_title', 'about_us_content', 'terms_title', 'terms_content', 'privacy_title', 'privacy_content'],
-            'contact' => ['email', 'phone', 'address', 'social_facebook', 'social_instagram', 'social_twitter', 'social_youtube'],
+            'contact' => ['email', 'phone', 'address', 'whatsapp_number', 'social_facebook', 'social_instagram', 'social_twitter', 'social_youtube'],
             'mail' => ['mail_mailer', 'mail_host', 'mail_port', 'mail_username', 'mail_password', 'mail_encryption', 'mail_from_address', 'mail_from_name'],
-            'commerce' => ['shipping_charge', 'gst_percentage', 'low_stock_threshold'],
+            'commerce' => ['shipping_charge', 'gst_percentage', 'low_stock_threshold', 'cod_enabled'],
             'payments' => ['razorpay_mode', 'razorpay_test_key_id', 'razorpay_test_key_secret', 'razorpay_live_key_id', 'razorpay_live_key_secret'],
             'social-login' => ['google_client_id', 'google_client_secret'],
         ];
@@ -208,6 +208,13 @@
             <h2 class="section-title">Social Media Links</h2>
 
             <div class="form-group">
+                <label for="whatsapp_number" class="form-label">WhatsApp Number</label>
+                <input id="whatsapp_number" type="text" name="whatsapp_number" value="{{ old('whatsapp_number', $settings['whatsapp_number'] ?? '') }}" placeholder="+91XXXXXXXXXX" class="form-control">
+                @error('whatsapp_number') <span class="field-error">{{ $message }}</span> @enderror
+                <small style="color: var(--text-muted);">Include the country code. Powers the WhatsApp support button on checkout and the WhatsApp link shown across the site.</small>
+            </div>
+
+            <div class="form-group">
                 <label for="social_facebook" class="form-label">Facebook URL</label>
                 <input id="social_facebook" type="url" name="social_facebook" value="{{ old('social_facebook', $settings['social_facebook'] ?? '') }}" placeholder="https://facebook.com/yourpage" class="form-control">
                 @error('social_facebook') <span class="field-error">{{ $message }}</span> @enderror
@@ -300,6 +307,18 @@
         </div>
 
         <div class="profile-tab-panel {{ $activeSettingsTab === 'commerce' ? 'active' : '' }}" data-tab-group="admin-settings" data-tab-panel="commerce">
+        <section class="card">
+            <h2 class="section-title">Payment Methods</h2>
+
+            <div class="form-group form-check">
+                <input type="hidden" name="cod_enabled" value="0">
+                <input id="cod_enabled" type="checkbox" name="cod_enabled" value="1" {{ old('cod_enabled', $settings['cod_enabled'] ?? '1') == '1' ? 'checked' : '' }}>
+                <label for="cod_enabled">Enable Cash on Delivery (COD)</label>
+            </div>
+            @error('cod_enabled') <span class="field-error">{{ $message }}</span> @enderror
+            <small style="color: var(--text-muted);">When disabled, customers won't see Cash on Delivery as a payment option at checkout.</small>
+        </section>
+
         <section class="card">
             <h2 class="section-title">Shipping</h2>
 

@@ -124,6 +124,20 @@ svg {
     color: var(--color-danger-dark);
 }
 
+.btn-whatsapp {
+    background: #25d366;
+    color: #fff;
+}
+
+.btn-whatsapp:hover:not(:disabled) {
+    background: #1fb855;
+}
+
+.btn-whatsapp svg {
+    width: 16px;
+    height: 16px;
+}
+
 .btn-link {
     background: none;
     border: none;
@@ -3048,6 +3062,14 @@ td.text-right, th.text-right {
 }
 
 /* Site: Checkout */
+.checkout-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
 .checkout-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 340px;
@@ -3658,6 +3680,10 @@ td.text-right, th.text-right {
 
 .social-badge-youtube {
     background: #ff0000;
+}
+
+.social-badge-whatsapp {
+    background: #25d366;
 }
 
 /* Pagination */
