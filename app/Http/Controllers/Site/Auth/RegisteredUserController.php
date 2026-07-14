@@ -34,6 +34,8 @@ class RegisteredUserController extends Controller
 
         $user->sendEmailVerificationNotification();
 
-        return redirect()->route('login')->with('status', 'Registration successful! Please check your email to verify your account before logging in.');
+        $request->session()->put('otp_email', $user->email);
+
+        return redirect()->route('verification.notice');
     }
 }

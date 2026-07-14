@@ -30,9 +30,11 @@ class AuthenticatedSessionController extends Controller
         }
 
         if (! Auth::user()->hasVerifiedEmail()) {
+            $request->session()->put('otp_email', Auth::user()->email);
+
             Auth::logout();
 
-            return back()->withErrors(['email' => 'Please verify your email address before logging in. Check your inbox for the verification link.'])->onlyInput('email');
+            return redirect()->route('verification.notice')->with('status', 'Please verify your email address before logging in. Enter the code we sent you, or request a new one below.');
         }
 
         $request->session()->regenerate();

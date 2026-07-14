@@ -5,7 +5,7 @@
         <div class="auth-card card">
             <h1 class="section-title">Verify your email</h1>
 
-            <p>Thanks for registering! Please check your email for a verification link before logging in.</p>
+            <p>We've sent a 6-digit verification code to <strong>{{ $email }}</strong>. Enter it below to activate your account.</p>
 
             @if (session('status'))
                 <div class="alert alert-success">
@@ -21,17 +21,24 @@
                 </div>
             @endif
 
-            <p>Didn't receive the email?</p>
-
-            <form method="POST" action="{{ route('verification.send') }}">
+            <form method="POST" action="{{ route('verification.verify') }}">
                 @csrf
 
                 <div class="form-group">
-                    <label for="email" class="form-label">Email</label>
-                    <input id="email" type="email" name="email" required class="form-control">
+                    <label for="otp" class="form-label">Verification Code</label>
+                    <input id="otp" type="text" name="otp" required autofocus
+                           inputmode="numeric" pattern="[0-9]*" maxlength="6"
+                           class="form-control otp-input" placeholder="000000">
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Resend Verification Email</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Verify Email</button>
+            </form>
+
+            <p style="margin-top: 1.25rem;">Didn't receive the code?</p>
+
+            <form method="POST" action="{{ route('verification.send') }}">
+                @csrf
+                <button type="submit" class="btn btn-secondary" style="width: 100%;">Resend Code</button>
             </form>
 
             <div class="auth-card-links">

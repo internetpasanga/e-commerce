@@ -11,16 +11,16 @@ class EmailVerificationNotificationController extends Controller
 {
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'email' => ['required', 'email'],
-        ]);
+        $email = $request->input('email') ?: session('otp_email');
 
-        $user = User::where('email', $request->input('email'))->first();
+        if ($email) {
+            $user = User::where('email', $email)->first();
 
-        if ($user && ! $user->hasVerifiedEmail()) {
-            $user->sendEmailVerificationNotification();
+            if ($user && ! $user->hasVerifiedEmail()) {
+                $user->sendEmailVerificationNotification();
+            }
         }
 
-        return back()->with('status', 'If an account with that email exists and is unverified, a new verification link has been sent.');
+        return back()->with('status', 'If an account with that email exists and is unverified, a new verification code has been sent.');
     }
 }

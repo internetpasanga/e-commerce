@@ -4,16 +4,16 @@ return [
 
     'verify-email' => [
         'name' => 'Email Verification',
-        'subject' => 'Verify your email address',
-        'description' => 'Sent when a customer registers. Available variables: {{ name }}, {{ verification_url }}. Also available everywhere: {{ site_name }}, {{ primary_color }}.',
+        'subject' => 'Your verification code is {{ otp }}',
+        'description' => 'Sent when a customer registers. Available variables: {{ name }}, {{ otp }}. Also available everywhere: {{ site_name }}, {{ primary_color }}.',
         'body' => <<<'HTML'
             <h2 style="margin:0 0 16px; font-size:20px; color:#101828;">Verify your email address</h2>
             <p style="margin:0 0 16px;">Hi {{ name }},</p>
-            <p style="margin:0 0 24px;">Thanks for creating an account with {{ site_name }}! Please confirm this is your email address so we can activate your account.</p>
+            <p style="margin:0 0 24px;">Thanks for creating an account with {{ site_name }}! Enter the code below to verify your email address. It expires in 10 minutes.</p>
             <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
                 <tr>
-                    <td style="border-radius:8px; background-color:{{ primary_color }};">
-                        <a href="{{ verification_url }}" style="display:inline-block; padding:14px 32px; font-size:15px; font-weight:600; color:#ffffff; text-decoration:none; border-radius:8px;">Verify Email Address</a>
+                    <td style="border-radius:8px; background-color:#f8f9fb; padding:18px 28px;">
+                        <span style="display:block; font-size:32px; font-weight:800; letter-spacing:8px; color:{{ primary_color }};">{{ otp }}</span>
                     </td>
                 </tr>
             </table>

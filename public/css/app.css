@@ -356,6 +356,14 @@ textarea.rte-source {
     border-color: var(--color-danger);
 }
 
+.otp-input {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.6em;
+    text-indent: 0.6em;
+}
+
 .field-error {
     display: block;
     color: var(--color-danger);

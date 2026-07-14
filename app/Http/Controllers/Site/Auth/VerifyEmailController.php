@@ -9,17 +9,25 @@ use Illuminate\Http\Request;
 
 class VerifyEmailController extends Controller
 {
-    public function __invoke(Request $request, int $id, string $hash): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $user = User::findOrFail($id);
+        $request->validate([
+            'otp' => ['required', 'string', 'size:6'],
+        ]);
 
-        if (! hash_equals($hash, sha1($user->getEmailForVerification()))) {
-            abort(403, 'Invalid verification link.');
+        $email = session('otp_email');
+
+        if (! $email) {
+            return redirect()->route('register');
         }
 
-        if (! $user->hasVerifiedEmail()) {
-            $user->markEmailAsVerified();
+        $user = User::where('email', $email)->first();
+
+        if (! $user || ! $user->verifyEmailOtp($request->input('otp'))) {
+            return back()->withErrors(['otp' => 'That code is invalid or has expired. Please try again or request a new one.']);
         }
+
+        session()->forget('otp_email');
 
         return redirect()->route('login')->with('status', 'Your email has been verified. You can now log in.');
     }
