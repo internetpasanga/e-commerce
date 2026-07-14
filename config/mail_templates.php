@@ -12,8 +12,8 @@ return [
             <p style="margin:0 0 24px;">Thanks for creating an account with {{ site_name }}! Enter the code below to verify your email address. It expires in 10 minutes.</p>
             <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
                 <tr>
-                    <td style="border-radius:8px; background-color:#f8f9fb; padding:18px 28px;">
-                        <span style="display:block; font-size:32px; font-weight:800; letter-spacing:8px; color:{{ primary_color }};">{{ otp }}</span>
+                    <td bgcolor="#101828" style="border-radius:8px; background-color:#101828; padding:20px 28px;">
+                        <span style="display:block; font-size:32px; font-weight:800; letter-spacing:10px; color:#ffffff;">{{ otp }}</span>
                     </td>
                 </tr>
             </table>
