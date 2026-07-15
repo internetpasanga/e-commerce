@@ -1,20 +1,23 @@
 <x-layouts.admin title="Inventory">
     <h1 class="page-title">Inventory</h1>
 
-    <form method="GET" action="{{ route('admin.inventory.index') }}" class="filter-bar">
-        <input type="text" name="search" placeholder="Search by product name..." class="form-control" value="{{ request('search') }}">
+    <div class="card card-flush">
+        <div class="card-header card-header-filters">
+            <form method="GET" action="{{ route('admin.inventory.index') }}" class="filter-bar">
+                <input type="text" name="search" placeholder="Search by product name..." class="form-control" value="{{ request('search') }}">
 
-        <label class="form-check" style="display: flex; align-items: center; gap: 0.4rem;">
-            <input type="checkbox" name="low_stock" value="1" @checked(request()->boolean('low_stock')) onchange="this.form.submit()">
-            Low stock only
-        </label>
+                <label class="form-check" style="display: flex; align-items: center; gap: 0.4rem;">
+                    <input type="checkbox" name="low_stock" value="1" @checked(request()->boolean('low_stock')) onchange="this.form.submit()">
+                    Low stock only
+                </label>
 
-        <button type="submit" class="btn btn-primary">Filter</button>
-        <a href="{{ route('admin.inventory.index') }}" class="btn btn-secondary">Reset</a>
-    </form>
+                <button type="submit" class="btn btn-primary">Filter</button>
+                <a href="{{ route('admin.inventory.index') }}" class="btn btn-secondary">Reset</a>
+            </form>
+        </div>
 
-    <div class="table-wrap">
-        <table>
+        <div class="table-wrap">
+            <table>
             <thead>
                 <tr>
                     <th>Image</th>
@@ -52,10 +55,13 @@
                     </tr>
                 @endforelse
             </tbody>
-        </table>
-    </div>
+            </table>
+        </div>
 
-    <div style="margin-top: 1rem;">
-        {{ $products->links() }}
+        @if ($products->hasPages())
+            <div class="card-footer">
+                {{ $products->links() }}
+            </div>
+        @endif
     </div>
 </x-layouts.admin>

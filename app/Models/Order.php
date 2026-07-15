@@ -61,6 +61,16 @@ class Order extends Model
         ];
     }
 
+    /**
+     * Resolve route-model bindings by the human-readable order number and
+     * generate order URLs with it (e.g. /orders/ORD20260714JHXDS4) instead
+     * of the numeric primary key.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'order_number';
+    }
+
     public static function generateOrderNumber(): string
     {
         do {

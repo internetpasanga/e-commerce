@@ -13,7 +13,11 @@ class OrderController extends Controller
 {
     public function index(Request $request): View
     {
-        $orders = $request->user()->orders()->withCount('items')->latest()->paginate(10);
+        $orders = $request->user()->orders()
+            ->with(['items.product:id,slug,thumbnail,status'])
+            ->withCount('items')
+            ->latest()
+            ->paginate(10);
 
         return view('site.orders.index', compact('orders'));
     }

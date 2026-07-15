@@ -18,8 +18,13 @@
         </div>
     @endif
 
-    <div class="table-wrap">
-        <table>
+    <div class="card card-flush">
+        <div class="card-header">
+            <h2 class="card-title">All Templates</h2>
+        </div>
+
+        <div class="table-wrap">
+            <table>
             <thead>
                 <tr>
                     <th>Name</th>
@@ -72,10 +77,13 @@
                     </tr>
                 @endforelse
             </tbody>
-        </table>
-    </div>
+            </table>
+        </div>
 
-    <div style="margin-top: 1rem;">
-        {{ $emailTemplates->links() }}
+        @if ($emailTemplates->hasPages())
+            <div class="card-footer">
+                {{ $emailTemplates->links() }}
+            </div>
+        @endif
     </div>
 </x-layouts.admin>

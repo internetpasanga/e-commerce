@@ -48,44 +48,37 @@
     @endif
 
     <header class="site-header">
-        <div class="site-header-inner">
-            <button type="button" class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">
-                <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-                <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
-
-            <a href="{{ route('home') }}" class="site-brand">
-                @if (! empty($siteSettings['logo']))
-                    <img src="{{ asset('storage/'.$siteSettings['logo']) }}" alt="{{ $siteName }}" class="site-logo">
-                @else
-                    {{ $siteName }}
-                @endif
-            </a>
-
-            <nav class="site-nav" id="site-nav">
-                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
-                <a href="{{ route('about.index') }}" class="{{ request()->routeIs('about.index') ? 'active' : '' }}">About Us</a>
-                <a href="{{ route('shop.index') }}" class="{{ request()->routeIs('shop.index') ? 'active' : '' }}">Shop</a>
-                <a href="{{ route('faqs.index') }}" class="{{ request()->routeIs('faqs.index') ? 'active' : '' }}">FAQs</a>
-                <a href="{{ route('contact.index') }}" class="{{ request()->routeIs('contact.index') ? 'active' : '' }}">Contact Us</a>
-            </nav>
-
-            <form method="GET" action="{{ route('search.index') }}" class="site-search" role="search">
-                <input type="text" name="q" value="{{ request('q') }}" placeholder="Search products..." class="site-search-input" aria-label="Search products">
-                <button type="submit" class="site-search-btn" aria-label="Search">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <div class="site-header-primary">
+            <div class="site-header-primary-inner">
+                <button type="button" class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">
+                    <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                    <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
-            </form>
 
-            <div class="site-header-icons">
+                <a href="{{ route('home') }}" class="site-brand">
+                    @if (! empty($siteSettings['logo']))
+                        <img src="{{ asset('storage/'.$siteSettings['logo']) }}" alt="{{ $siteName }}" class="site-logo">
+                    @else
+                        {{ $siteName }}
+                    @endif
+                </a>
+
+                <form method="GET" action="{{ route('search.index') }}" class="site-search" role="search">
+                    <input type="text" name="q" value="{{ request('q') }}" placeholder="Search products..." class="site-search-input" aria-label="Search products">
+                    <button type="submit" class="site-search-btn" aria-label="Search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                    </button>
+                </form>
+
+                <div class="site-header-actions">
                 @auth
                     <div class="user-menu" id="user-menu">
-                        <button type="button" class="user-menu-trigger" id="user-menu-trigger" aria-label="Account menu">
-                            @if (auth()->user()->avatar)
-                                <img src="{{ asset('storage/'.auth()->user()->avatar) }}" alt="" class="user-menu-avatar">
-                            @else
-                                <span class="user-menu-avatar">{{ Str::of(auth()->user()->name)->substr(0, 1)->upper() }}</span>
-                            @endif
+                        <button type="button" class="user-menu-trigger header-account" id="user-menu-trigger" aria-label="Account menu">
+                            <svg class="account-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+                            <span class="action-top">Hello, {{ Str::of(auth()->user()->name)->before(' ') ?: auth()->user()->name }}</span>
+                            <span class="action-main">Account &amp; Lists
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                            </span>
                         </button>
 
                         <div class="user-menu-dropdown" id="user-menu-dropdown">
@@ -122,20 +115,41 @@
                         </div>
                     </div>
                 @else
-                    <a href="{{ route('login') }}" class="site-icon-link" aria-label="Login">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+                    <a href="{{ route('login') }}" class="site-header-action account-link" aria-label="Sign in">
+                        <svg class="account-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+                        <span class="action-top">Hello, sign in</span>
+                        <span class="action-main">Account &amp; Lists</span>
                     </a>
                 @endauth
 
-                <a href="{{ route('wishlist.index') }}" class="site-icon-link" aria-label="Wishlist">
+                <a href="{{ auth()->check() ? route('orders.index') : route('login') }}" class="site-header-action orders">
+                    <span class="action-top">Returns</span>
+                    <span class="action-main">&amp; Orders</span>
+                </a>
+
+                <a href="{{ route('wishlist.index') }}" class="site-header-wishlist" aria-label="Wishlist">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                     <span class="site-icon-count" id="wishlist-count" style="{{ $wishlistCount > 0 ? '' : 'display: none;' }}">{{ $wishlistCount }}</span>
                 </a>
 
-                <a href="{{ route('cart.index') }}" class="site-icon-link" aria-label="Cart" style="margin-right:15px;">
+                <a href="{{ route('cart.index') }}" class="site-header-cart" aria-label="Cart">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                     <span class="site-icon-count" id="cart-count" style="{{ $cartCount > 0 ? '' : 'display: none;' }}">{{ $cartCount }}</span>
+                    <span class="cart-label">Cart</span>
                 </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="site-header-secondary">
+            <div class="site-header-secondary-inner">
+                <nav class="site-nav" id="site-nav">
+                    <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
+                    <a href="{{ route('shop.index') }}" class="{{ request()->routeIs('shop.index') ? 'active' : '' }}">Shop</a>
+                    <a href="{{ route('about.index') }}" class="{{ request()->routeIs('about.index') ? 'active' : '' }}">About Us</a>
+                    <a href="{{ route('faqs.index') }}" class="{{ request()->routeIs('faqs.index') ? 'active' : '' }}">FAQs</a>
+                    <a href="{{ route('contact.index') }}" class="{{ request()->routeIs('contact.index') ? 'active' : '' }}">Contact Us</a>
+                </nav>
             </div>
         </div>
     </header>

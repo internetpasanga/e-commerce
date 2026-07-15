@@ -12,10 +12,27 @@
         <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
 
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-brand">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5"/><path d="M4 9h16v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9z"/><path d="M9 13a3 3 0 0 0 6 0"/></svg>
-                {{ $siteSettings['site_name'] ?? config('app.name') }}
-            </div>
+            <a href="{{ route('admin.dashboard') }}" class="sidebar-brand">
+                @if (! empty($siteSettings['logo']))
+                    <img src="{{ asset('storage/'.$siteSettings['logo']) }}" alt="" class="sidebar-brand-logo">
+                @else
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5"/><path d="M4 9h16v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9z"/><path d="M9 13a3 3 0 0 0 6 0"/></svg>
+                @endif
+                <span class="sidebar-brand-text">{{ $siteSettings['site_name'] ?? config('app.name') }}</span>
+            </a>
+
+            <a href="{{ route('admin.profile.edit') }}" class="sidebar-user {{ request()->routeIs('admin.profile.*') ? 'active' : '' }}">
+                @if (auth()->user()->avatar)
+                    <img src="{{ asset('storage/'.auth()->user()->avatar) }}" alt="" class="sidebar-user-avatar">
+                @else
+                    <span class="sidebar-user-avatar">{{ Str::of(auth()->user()->name)->substr(0, 1)->upper() }}</span>
+                @endif
+                <span class="sidebar-user-info">
+                    <span class="sidebar-user-name">{{ auth()->user()->name }}</span>
+                    <span class="sidebar-user-role"><span class="sidebar-user-dot"></span>Administrator</span>
+                </span>
+            </a>
+
             <nav class="sidebar-nav">
                 <a href="{{ route('admin.dashboard') }}"
                    class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
@@ -27,7 +44,10 @@
                 <a href="{{ route('admin.orders.index') }}"
                    class="sidebar-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                    Orders
+                    <span class="sidebar-link-text">Orders</span>
+                    @if (! empty($pendingOrdersCount))
+                        <span class="sidebar-badge sidebar-badge-warning" title="{{ $pendingOrdersCount }} pending">{{ $pendingOrdersCount }}</span>
+                    @endif
                 </a>
                 <a href="{{ route('admin.customers.index') }}"
                    class="sidebar-link {{ request()->routeIs('admin.customers.*') ? 'active' : '' }}">
@@ -54,7 +74,10 @@
                 <a href="{{ route('admin.inventory.index') }}"
                    class="sidebar-link {{ request()->routeIs('admin.inventory.*') ? 'active' : '' }}">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3z" opacity="0"/><rect x="3" y="7" width="18" height="14" rx="1"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/></svg>
-                    Inventory
+                    <span class="sidebar-link-text">Inventory</span>
+                    @if (! empty($lowStockCount))
+                        <span class="sidebar-badge sidebar-badge-danger" title="{{ $lowStockCount }} low on stock">{{ $lowStockCount }}</span>
+                    @endif
                 </a>
 
                 <div class="sidebar-nav-label">Content</div>
@@ -66,7 +89,10 @@
                 <a href="{{ route('admin.reviews.index') }}"
                    class="sidebar-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                    Reviews
+                    <span class="sidebar-link-text">Reviews</span>
+                    @if (! empty($pendingReviewsCount))
+                        <span class="sidebar-badge sidebar-badge-info" title="{{ $pendingReviewsCount }} pending">{{ $pendingReviewsCount }}</span>
+                    @endif
                 </a>
                 <a href="{{ route('admin.faqs.index') }}"
                    class="sidebar-link {{ request()->routeIs('admin.faqs.*') ? 'active' : '' }}">
@@ -91,6 +117,11 @@
                     Profile
                 </a>
             </nav>
+
+            <div class="sidebar-footer">
+                <span class="sidebar-footer-label">Version</span>
+                <span class="sidebar-footer-value">1.0.0</span>
+            </div>
         </aside>
 
         <div class="admin-content">
@@ -99,17 +130,24 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
                 </button>
 
-                <span class="topbar-user">
-                    <span class="avatar">{{ Str::of(auth()->user()->name)->substr(0, 1)->upper() }}</span>
-                    <span class="topbar-user-name">{{ auth()->user()->name }}</span>
-                </span>
+                <a href="{{ route('home') }}" target="_blank" rel="noopener" class="topbar-link" title="View store">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5"/><path d="M4 9h16v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9z"/><path d="M9 13a3 3 0 0 0 6 0"/></svg>
+                    <span>View store</span>
+                </a>
 
-                <form method="POST" action="{{ route('admin.logout') }}" class="topbar-logout">
-                    @csrf
-                    <button type="submit" class="btn-icon danger" title="Log out">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
-                    </button>
-                </form>
+                <div class="topbar-right">
+                    <span class="topbar-user">
+                        <span class="avatar">{{ Str::of(auth()->user()->name)->substr(0, 1)->upper() }}</span>
+                        <span class="topbar-user-name">{{ auth()->user()->name }}</span>
+                    </span>
+
+                    <form method="POST" action="{{ route('admin.logout') }}" class="topbar-logout">
+                        @csrf
+                        <button type="submit" class="btn-icon danger" title="Log out">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+                        </button>
+                    </form>
+                </div>
             </header>
 
             <main class="admin-main">

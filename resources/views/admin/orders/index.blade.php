@@ -4,22 +4,25 @@
         <a href="{{ route('admin.orders.create') }}" class="btn btn-primary">Create Order</a>
     </div>
 
-    <form method="GET" action="{{ route('admin.orders.index') }}" class="filter-bar">
-        <input type="text" name="search" placeholder="Search by order number..." class="form-control" value="{{ request('search') }}">
+    <div class="card card-flush">
+        <div class="card-header card-header-filters">
+            <form method="GET" action="{{ route('admin.orders.index') }}" class="filter-bar">
+                <input type="text" name="search" placeholder="Search by order number..." class="form-control" value="{{ request('search') }}">
 
-        <select name="status" class="form-control">
-            <option value="">All Statuses</option>
-            @foreach (\App\Models\Order::STATUSES as $status)
-                <option value="{{ $status }}" @selected(request('status') === $status)>{{ ucfirst($status) }}</option>
-            @endforeach
-        </select>
+                <select name="status" class="form-control">
+                    <option value="">All Statuses</option>
+                    @foreach (\App\Models\Order::STATUSES as $status)
+                        <option value="{{ $status }}" @selected(request('status') === $status)>{{ ucfirst($status) }}</option>
+                    @endforeach
+                </select>
 
-        <button type="submit" class="btn btn-primary">Filter</button>
-        <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">Reset</a>
-    </form>
+                <button type="submit" class="btn btn-primary">Filter</button>
+                <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">Reset</a>
+            </form>
+        </div>
 
-    <div class="table-wrap">
-        <table>
+        <div class="table-wrap">
+            <table>
             <thead>
                 <tr>
                     <th>Order #</th>
@@ -59,10 +62,13 @@
                     </tr>
                 @endforelse
             </tbody>
-        </table>
-    </div>
+            </table>
+        </div>
 
-    <div style="margin-top: 1rem;">
-        {{ $orders->links() }}
+        @if ($orders->hasPages())
+            <div class="card-footer">
+                {{ $orders->links() }}
+            </div>
+        @endif
     </div>
 </x-layouts.admin>

@@ -1,26 +1,29 @@
 <x-layouts.admin title="Reviews">
     <h1 class="page-title">Reviews</h1>
 
-    <form method="GET" action="{{ route('admin.reviews.index') }}" class="filter-bar">
-        <select name="status" class="form-control">
-            <option value="">All Statuses</option>
-            @foreach (\App\Models\Review::STATUSES as $status)
-                <option value="{{ $status }}" @selected(request('status') === $status)>{{ ucfirst($status) }}</option>
-            @endforeach
-        </select>
-
-        <button type="submit" class="btn btn-primary">Filter</button>
-        <a href="{{ route('admin.reviews.index') }}" class="btn btn-secondary">Reset</a>
-    </form>
-
     @if (session('status'))
         <div class="alert alert-success">
             <p>{{ session('status') }}</p>
         </div>
     @endif
 
-    <div class="table-wrap">
-        <table>
+    <div class="card card-flush">
+        <div class="card-header card-header-filters">
+            <form method="GET" action="{{ route('admin.reviews.index') }}" class="filter-bar">
+                <select name="status" class="form-control">
+                    <option value="">All Statuses</option>
+                    @foreach (\App\Models\Review::STATUSES as $status)
+                        <option value="{{ $status }}" @selected(request('status') === $status)>{{ ucfirst($status) }}</option>
+                    @endforeach
+                </select>
+
+                <button type="submit" class="btn btn-primary">Filter</button>
+                <a href="{{ route('admin.reviews.index') }}" class="btn btn-secondary">Reset</a>
+            </form>
+        </div>
+
+        <div class="table-wrap">
+            <table>
             <thead>
                 <tr>
                     <th>Product</th>
@@ -94,10 +97,13 @@
                     </tr>
                 @endforelse
             </tbody>
-        </table>
-    </div>
+            </table>
+        </div>
 
-    <div style="margin-top: 1rem;">
-        {{ $reviews->links() }}
+        @if ($reviews->hasPages())
+            <div class="card-footer">
+                {{ $reviews->links() }}
+            </div>
+        @endif
     </div>
 </x-layouts.admin>

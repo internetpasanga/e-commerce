@@ -18,8 +18,13 @@
         </div>
     @endif
 
-    <div class="table-wrap">
-        <table>
+    <div class="card card-flush">
+        <div class="card-header">
+            <h2 class="card-title">All FAQs</h2>
+        </div>
+
+        <div class="table-wrap">
+            <table>
             <thead>
                 <tr>
                     <th>Question</th>
@@ -62,10 +67,13 @@
                     </tr>
                 @endforelse
             </tbody>
-        </table>
-    </div>
+            </table>
+        </div>
 
-    <div style="margin-top: 1rem;">
-        {{ $faqs->links() }}
+        @if ($faqs->hasPages())
+            <div class="card-footer">
+                {{ $faqs->links() }}
+            </div>
+        @endif
     </div>
 </x-layouts.admin>

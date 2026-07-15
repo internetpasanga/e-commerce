@@ -18,13 +18,16 @@
         </div>
     @endif
 
-    <form method="GET" class="filter-bar">
-        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by code" class="form-control">
-        <button type="submit" class="btn btn-secondary">Filter</button>
-    </form>
+    <div class="card card-flush">
+        <div class="card-header card-header-filters">
+            <form method="GET" class="filter-bar">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by code" class="form-control">
+                <button type="submit" class="btn btn-secondary">Filter</button>
+            </form>
+        </div>
 
-    <div class="table-wrap">
-        <table>
+        <div class="table-wrap">
+            <table>
             <thead>
                 <tr>
                     <th>Code</th>
@@ -79,10 +82,13 @@
                     </tr>
                 @endforelse
             </tbody>
-        </table>
-    </div>
+            </table>
+        </div>
 
-    <div style="margin-top: 1rem;">
-        {{ $coupons->links() }}
+        @if ($coupons->hasPages())
+            <div class="card-footer">
+                {{ $coupons->links() }}
+            </div>
+        @endif
     </div>
 </x-layouts.admin>

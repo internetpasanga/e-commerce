@@ -66,28 +66,45 @@
         </div>
     </section>
 
-    <section class="home-section">
-        <h2 class="page-title">Shop by Category</h2>
+    @if ($deals->isNotEmpty())
+        <section class="home-panel">
+            <div class="home-panel-header">
+                <h2 class="home-panel-title">Today's Deals</h2>
+                <a href="{{ route('shop.index', ['sort' => 'discount']) }}" class="home-panel-link">See all deals</a>
+            </div>
+            <div class="deal-strip">
+                @foreach ($deals as $product)
+                    @include('site.partials._deal-card')
+                @endforeach
+            </div>
+        </section>
+    @endif
 
-        <div class="category-grid">
-            @forelse ($categories as $category)
-                <a href="{{ route('category.show', $category) }}" class="category-tile">
-                    @if ($category->image)
-                        <img src="{{ asset('storage/'.$category->image) }}" alt="{{ $category->name }}">
-                    @endif
-                    <span class="category-tile-overlay">
-                        <span class="category-name">{{ $category->name }}</span>
-                    </span>
-                </a>
-            @empty
-                <p>No categories available yet.</p>
-            @endforelse
+    @if ($categories->isNotEmpty())
+        <section class="home-panel">
+            <div class="home-panel-header">
+                <h2 class="home-panel-title">Shop by Category</h2>
+            </div>
+            <div class="category-grid">
+                @foreach ($categories as $category)
+                    <a href="{{ route('category.show', $category) }}" class="category-tile">
+                        @if ($category->image)
+                            <img src="{{ asset('storage/'.$category->image) }}" alt="{{ $category->name }}">
+                        @endif
+                        <span class="category-tile-overlay">
+                            <span class="category-name">{{ $category->name }}</span>
+                        </span>
+                    </a>
+                @endforeach
+            </div>
+        </section>
+    @endif
+
+    <section class="home-panel">
+        <div class="home-panel-header">
+            <h2 class="home-panel-title">Featured Products</h2>
+            <a href="{{ route('shop.index') }}" class="home-panel-link">View all</a>
         </div>
-    </section>
-
-    <section class="home-section">
-        <h2 class="page-title">Featured Products</h2>
-
         <div class="product-grid">
             @forelse ($products as $product)
                 @include('site.partials._product-card')

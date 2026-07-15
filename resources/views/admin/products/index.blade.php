@@ -4,8 +4,10 @@
         <a href="{{ route('admin.products.create') }}" class="btn btn-primary">Add Product</a>
     </div>
 
-    <div class="filter-bar" id="product-filters">
-        <input type="text" name="search" placeholder="Search by name..." class="form-control" id="filter-search" value="{{ request('search') }}">
+    <div class="card card-flush">
+        <div class="card-header card-header-filters">
+            <div class="filter-bar" id="product-filters">
+                <input type="text" name="search" placeholder="Search by name..." class="form-control" id="filter-search" value="{{ request('search') }}">
 
         <select name="category_id" class="form-control" id="filter-category" data-searchable-select>
             <option value="">All Categories</option>
@@ -20,11 +22,13 @@
             <option value="0" @selected(request('status') === '0')>Inactive</option>
         </select>
 
-        <button type="button" class="btn btn-secondary" id="filter-reset">Reset</button>
-    </div>
+                <button type="button" class="btn btn-secondary" id="filter-reset">Reset</button>
+            </div>
+        </div>
 
-    <div id="products-table">
-        @include('admin.products._table')
+        <div id="products-table">
+            @include('admin.products._table')
+        </div>
     </div>
 
     <div class="modal-overlay" id="delete-modal">

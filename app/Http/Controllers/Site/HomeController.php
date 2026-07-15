@@ -21,6 +21,15 @@ class HomeController extends Controller
             ->take(8)
             ->get();
 
-        return view('site.home', compact('banners', 'categories', 'products'));
+        // Top discounted, in-stock products for the "Today's Deals" strip.
+        $deals = Product::with('category')
+            ->where('status', true)
+            ->where('stock', '>', 0)
+            ->whereColumn('sale_price', '<', 'mrp')
+            ->orderByRaw('(mrp - sale_price) / NULLIF(mrp, 0) DESC')
+            ->take(12)
+            ->get();
+
+        return view('site.home', compact('banners', 'categories', 'products', 'deals'));
     }
 }

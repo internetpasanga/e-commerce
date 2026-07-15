@@ -4,20 +4,23 @@
         <a href="{{ route('admin.customers.create') }}" class="btn btn-primary">Add Customer</a>
     </div>
 
-    <form method="GET" action="{{ route('admin.customers.index') }}" class="filter-bar">
-        <input type="text" name="search" placeholder="Search by name or email..." class="form-control" value="{{ request('search') }}">
-        <button type="submit" class="btn btn-primary">Search</button>
-        <a href="{{ route('admin.customers.index') }}" class="btn btn-secondary">Reset</a>
-    </form>
-
     @if (session('status'))
         <div class="alert alert-success">
             <p>{{ session('status') }}</p>
         </div>
     @endif
 
-    <div class="table-wrap">
-        <table>
+    <div class="card card-flush">
+        <div class="card-header card-header-filters">
+            <form method="GET" action="{{ route('admin.customers.index') }}" class="filter-bar">
+                <input type="text" name="search" placeholder="Search by name or email..." class="form-control" value="{{ request('search') }}">
+                <button type="submit" class="btn btn-primary">Search</button>
+                <a href="{{ route('admin.customers.index') }}" class="btn btn-secondary">Reset</a>
+            </form>
+        </div>
+
+        <div class="table-wrap">
+            <table>
             <thead>
                 <tr>
                     <th>Name</th>
@@ -48,10 +51,13 @@
                     </tr>
                 @endforelse
             </tbody>
-        </table>
-    </div>
+            </table>
+        </div>
 
-    <div style="margin-top: 1rem;">
-        {{ $customers->links() }}
+        @if ($customers->hasPages())
+            <div class="card-footer">
+                {{ $customers->links() }}
+            </div>
+        @endif
     </div>
 </x-layouts.admin>

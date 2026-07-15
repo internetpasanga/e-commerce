@@ -7,9 +7,7 @@
                 <div class="product-card-image"></div>
             @endif
 
-            @if ($product->stock > 0)
-                <span class="stock-badge in-stock">In Stock</span>
-            @else
+            @if ($product->stock <= 0)
                 <span class="stock-badge out-of-stock">Out of Stock</span>
             @endif
         </div>
@@ -18,14 +16,32 @@
                 <p class="product-card-category">{{ $product->category->name }}</p>
             @endif
             <p class="product-card-name">{{ $product->name }}</p>
-            <div class="price-row">
-                <p class="product-card-price">₹{{ number_format($product->sale_price, 2) }}</p>
+
+            @php
+                // Prefer eager-loaded aggregates when the controller provides them
+                // (withCount/withAvg on approvedReviews); fall back to the model helpers.
+                $ratingCount = $product->approved_reviews_count ?? $product->reviewsCount();
+                $ratingAvg = $ratingCount > 0
+                    ? (float) ($product->approved_reviews_avg_rating ?? $product->averageRating())
+                    : 0.0;
+            @endphp
+            @if ($ratingCount > 0)
+                @include('site.partials._stars', ['rating' => $ratingAvg, 'count' => $ratingCount])
+            @endif
+
+            @php
+                [$priceWhole, $priceFrac] = explode('.', number_format($product->sale_price, 2, '.', ''));
+            @endphp
+            <div class="pc-price">
+                <span class="price">
+                    <span class="price-cur">₹</span><span class="price-whole">{{ number_format((int) $priceWhole) }}</span><span class="price-frac">{{ $priceFrac }}</span>
+                </span>
                 @if ($product->discountPercentage() > 0)
-                    <p class="price-mrp">₹{{ number_format($product->mrp, 2) }}</p>
+                    <span class="price-off">{{ $product->discountPercentage() }}% off</span>
                 @endif
             </div>
             @if ($product->discountPercentage() > 0)
-                <span class="badge badge-success">{{ $product->discountPercentage() }}% OFF</span>
+                <div class="price-list">M.R.P: <span class="strike">₹{{ number_format($product->mrp, 2) }}</span></div>
             @endif
         </div>
     </a>

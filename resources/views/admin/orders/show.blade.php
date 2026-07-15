@@ -25,8 +25,55 @@
         </div>
     @endif
 
-    <section class="card">
-        <h2 class="section-title">Order Items</h2>
+    @php
+        $statusColor = match ($order->status) {
+            'delivered' => 'bg-success',
+            'processing', 'shipped' => 'bg-info',
+            'cancelled' => 'bg-danger',
+            default => 'bg-warning',
+        };
+    @endphp
+    <div class="info-box-row">
+        <div class="info-box">
+            <span class="info-box-icon bg-primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">Order Total</span>
+                <span class="info-box-number">₹{{ number_format($order->grand_total, 2) }}</span>
+            </div>
+        </div>
+        <div class="info-box">
+            <span class="info-box-icon {{ $order->payment_status === 'paid' ? 'bg-success' : 'bg-warning' }}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">Payment</span>
+                <span class="info-box-number">{{ ucfirst($order->payment_status) }}</span>
+            </div>
+        </div>
+        <div class="info-box">
+            <span class="info-box-icon {{ $statusColor }}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">Status</span>
+                <span class="info-box-number">{{ ucfirst($order->status) }}</span>
+            </div>
+        </div>
+        <div class="info-box">
+            <span class="info-box-icon bg-info">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">Items</span>
+                <span class="info-box-number">{{ $order->items->sum('quantity') }}</span>
+            </div>
+        </div>
+    </div>
+
+    <section class="card card-flush">
+        <div class="card-header"><h2 class="card-title">Order Items</h2></div>
         <div class="table-wrap">
             <table>
                 <thead>
@@ -52,9 +99,9 @@
     </section>
 
     <div class="checkout-layout">
-        <section class="card">
-            <h2 class="section-title">Shipping Address</h2>
-            <p class="address-option-text">
+        <section class="card card-flush">
+            <div class="card-header"><h2 class="card-title">Shipping Address</h2></div>
+            <p class="address-option-text" style="padding: 1.25rem;">
                 {{ $order->shipping_name }}<br>
                 {{ $order->shipping_phone }}<br>
                 {{ $order->shipping_address_line1 }}@if ($order->shipping_address_line2), {{ $order->shipping_address_line2 }}@endif<br>
@@ -63,9 +110,9 @@
             </p>
         </section>
 
-        <section class="card">
-            <h2 class="section-title">Billing Address</h2>
-            <p class="address-option-text">
+        <section class="card card-flush">
+            <div class="card-header"><h2 class="card-title">Billing Address</h2></div>
+            <p class="address-option-text" style="padding: 1.25rem;">
                 {{ $order->billing_name }}<br>
                 {{ $order->billing_phone }}<br>
                 {{ $order->billing_address_line1 }}@if ($order->billing_address_line2), {{ $order->billing_address_line2 }}@endif<br>
@@ -136,26 +183,43 @@
         <section class="card">
             <h2 class="section-title">Status History</h2>
 
-            <ul class="status-timeline">
+            <ol class="order-timeline">
                 @foreach ($order->statusHistories as $history)
-                    <li class="status-timeline-item">
-                        <div class="status-timeline-meta">
-                            <span class="badge {{ \App\Models\Order::badgeClassForStatus($history->status) }}">{{ ucfirst($history->status) }}</span>
-                            <span class="status-timeline-date">{{ $history->created_at->format('d M Y, h:i A') }}</span>
+                    @php
+                        $tlColor = match ($history->status) {
+                            'delivered' => 'var(--box-success)',
+                            'processing', 'shipped' => 'var(--box-info)',
+                            'cancelled' => 'var(--box-danger)',
+                            default => 'var(--box-warning)',
+                        };
+                    @endphp
+                    <li class="order-timeline-item {{ $loop->first ? 'is-current' : '' }}" style="--tl-color: {{ $tlColor }};">
+                        <span class="order-timeline-marker">
+                            @if ($history->status === 'cancelled')
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>
+                            @else
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                            @endif
+                        </span>
+                        <div class="order-timeline-content">
+                            <div class="order-timeline-head">
+                                <span class="order-timeline-status">{{ ucfirst($history->status) }}</span>
+                                <span class="order-timeline-date">{{ $history->created_at->format('d M Y, h:i A') }}</span>
+                            </div>
+                            @if ($history->note)
+                                <p class="order-timeline-note">{{ $history->note }}</p>
+                            @endif
+                            @if ($history->changedBy)
+                                <p class="order-timeline-by">Updated by {{ $history->changedBy->name }}</p>
+                            @endif
                         </div>
-                        @if ($history->note)
-                            <p class="status-timeline-note">{{ $history->note }}</p>
-                        @endif
-                        @if ($history->changedBy)
-                            <p class="status-timeline-note">by {{ $history->changedBy->name }}</p>
-                        @endif
                     </li>
                 @endforeach
-            </ul>
+            </ol>
         </section>
     </div>
 
-    <div class="order-summary">
+    <div class="order-summary" style="max-width: 400px; margin-left: auto;">
         <h2 class="section-title">Order Summary</h2>
 
         <div class="order-summary-row">

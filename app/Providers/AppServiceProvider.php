@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Category;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\Review;
 use App\Models\Setting;
 use App\Support\Cart;
 use App\Support\Wishlist;
@@ -45,6 +48,15 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer(['components.layouts.admin', 'components.layouts.guest'], function ($view) {
             $view->with('siteSettings', Setting::allSettings());
+        });
+
+        // Live counts for the admin sidebar notification badges.
+        View::composer('components.layouts.admin', function ($view) {
+            $lowStockThreshold = (int) Setting::get('low_stock_threshold', 5);
+
+            $view->with('pendingOrdersCount', Order::where('status', 'pending')->count());
+            $view->with('pendingReviewsCount', Review::where('status', 'pending')->count());
+            $view->with('lowStockCount', Product::where('stock', '<=', $lowStockThreshold)->count());
         });
 
         $this->configureMailFromSettings();
