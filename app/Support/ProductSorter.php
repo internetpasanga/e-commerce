@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ProductSorter
 {
@@ -23,14 +24,15 @@ class ProductSorter
     /**
      * Apply a sort option to a product query.
      */
-    public static function apply(Builder $query, ?string $sort): void
+
+    public static function apply(Builder|HasMany $query, ?string $sort): void
     {
         match ($sort) {
-            'price_asc' => $query->orderBy('sale_price'),
+            'price_asc'  => $query->orderBy('sale_price'),
             'price_desc' => $query->orderByDesc('sale_price'),
-            'discount' => $query->orderByRaw('(mrp - sale_price) / NULLIF(mrp, 0) DESC'),
-            'newest' => $query->latest(),
-            default => $query->orderBy('priority')->latest(),
+            'discount'   => $query->orderByRaw('(mrp - sale_price) / NULLIF(mrp, 0) DESC'),
+            'newest'     => $query->latest(),
+            default      => $query->orderBy('priority')->latest(),
         };
     }
 }
