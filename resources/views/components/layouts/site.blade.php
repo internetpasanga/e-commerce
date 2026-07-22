@@ -2,7 +2,7 @@
     $siteName = $siteSettings['site_name'] ?? config('app.name');
     $metaDescription = $siteSettings['meta_description'] ?? null;
     $metaKeywords = $siteSettings['meta_keywords'] ?? null;
-    $primaryColor = $siteSettings['primary_color'] ?? '#4f46e5';
+    $primaryColor = $siteSettings['primary_color'] ?? '#717fe0';
     $secondaryColor = $siteSettings['secondary_color'] ?? '#64748b';
     $hasContactBar = ! empty($siteSettings['email']) || ! empty($siteSettings['phone']);
     $hasFooterContact = ! empty($siteSettings['email']) || ! empty($siteSettings['phone']) || ! empty($siteSettings['address']);
@@ -22,10 +22,9 @@
         <meta name="keywords" content="{{ $metaKeywords }}">
     @endif
     <title>{{ isset($title) ? $title.' - '.$siteName : $siteName }}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ asset('cozastore-1.0.0/images/icons/favicon.png') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/site-theme.css') }}">
 </head>
 <body style="--site-primary: {{ $primaryColor }}; --site-secondary: {{ $secondaryColor }};">
     @if ($hasContactBar)
@@ -129,7 +128,7 @@
 
                 <a href="{{ route('wishlist.index') }}" class="site-header-wishlist" aria-label="Wishlist">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                    <span class="site-icon-count" id="wishlist-count" style="{{ $wishlistCount > 0 ? '' : 'display: none;' }}">{{ $wishlistCount }}</span>
+                    <span class="site-icon-count wishlist-count-badge" id="wishlist-count" style="{{ $wishlistCount > 0 ? '' : 'display: none;' }}">{{ $wishlistCount }}</span>
                 </a>
 
                 <a href="{{ route('cart.index') }}" class="site-header-cart" aria-label="Cart">
@@ -144,11 +143,27 @@
         <div class="site-header-secondary">
             <div class="site-header-secondary-inner">
                 <nav class="site-nav" id="site-nav">
+                    {{-- Mobile-menu-only: search box and wishlist link (hidden on desktop, where
+                         they live in the primary header row instead — see .site-nav-search /
+                         .site-nav-wishlist-link in site-theme.css). --}}
+                    <form method="GET" action="{{ route('search.index') }}" class="site-nav-search" role="search">
+                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Search products..." aria-label="Search products">
+                        <button type="submit" aria-label="Search">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                        </button>
+                    </form>
+
                     <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
                     <a href="{{ route('shop.index') }}" class="{{ request()->routeIs('shop.index') ? 'active' : '' }}">Shop</a>
                     <a href="{{ route('about.index') }}" class="{{ request()->routeIs('about.index') ? 'active' : '' }}">About Us</a>
                     <a href="{{ route('faqs.index') }}" class="{{ request()->routeIs('faqs.index') ? 'active' : '' }}">FAQs</a>
                     <a href="{{ route('contact.index') }}" class="{{ request()->routeIs('contact.index') ? 'active' : '' }}">Contact Us</a>
+
+                    <a href="{{ route('wishlist.index') }}" class="site-nav-wishlist-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        Wishlist
+                        <span class="site-icon-count wishlist-count-badge" style="{{ $wishlistCount > 0 ? '' : 'display: none;' }}">{{ $wishlistCount }}</span>
+                    </a>
                 </nav>
             </div>
         </div>

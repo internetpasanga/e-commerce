@@ -1,0 +1,796 @@
+/* ==========================================================================
+   CozaStore-inspired storefront theme
+   Loaded AFTER app.css, on storefront pages only (components/layouts/site
+   .blade.php). Every rule here only overrides *cosmetic* properties (color,
+   font, radius, shadow, spacing, border) on the existing class contract —
+   no selector is renamed and no layout (display/grid/flex/width) is
+   touched, so every data-action/id hook that public/js/*.js depends on
+   keeps working untouched. Fonts/icons are referenced directly from the
+   already-public cozastore-1.0.0 template folder, no assets duplicated.
+   ========================================================================== */
+
+/* ----- Fonts (self-hosted, pulled from the uploaded CozaStore template) ----- */
+@font-face {
+    font-family: 'Poppins';
+    src: url('../cozastore-1.0.0/fonts/Poppins/Poppins-Light.ttf');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../cozastore-1.0.0/fonts/Poppins/Poppins-Regular.ttf');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../cozastore-1.0.0/fonts/Poppins/Poppins-Medium.ttf');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../cozastore-1.0.0/fonts/Poppins/Poppins-SemiBold.ttf');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../cozastore-1.0.0/fonts/Poppins/Poppins-Bold.ttf');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../cozastore-1.0.0/fonts/Poppins/Poppins-Bold.ttf');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Playfair Display';
+    src: url('../cozastore-1.0.0/fonts/PlayfairDisplay/PlayfairDisplay-Regular.ttf');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Playfair Display';
+    src: url('../cozastore-1.0.0/fonts/PlayfairDisplay/PlayfairDisplay-Bold.ttf');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../cozastore-1.0.0/fonts/Montserrat/Montserrat-Regular.ttf');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../cozastore-1.0.0/fonts/Montserrat/Montserrat-Bold.ttf');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-eyebrow: 'Montserrat', -apple-system, sans-serif;
+    /* CozaStore accent palette */
+    --color-primary: #717fe0;
+    --color-primary-dark: #4d5bc4;
+    --color-primary-soft: rgba(113, 127, 224, 0.12);
+    --star: #f9ba48;
+    --accent: #f9ba48;
+    --sale-badge: #f74877;
+    --border-color: #e6e6e6;
+    --text-muted: #888;
+    --radius: 3px;
+    --radius-lg: 6px;
+    --radius-pill: 25px;
+    --shadow-sm: 0 1px 5px 0 rgba(0, 0, 0, 0.15);
+    --shadow-md: 0 3px 10px 0 rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 3px 20px 0 rgba(0, 0, 0, 0.2);
+    /* Every header icon (menu, search, account, wishlist, cart) shares this
+       size so the row reads as one consistent set, desktop and mobile alike. */
+    --header-icon-size: 24px;
+}
+
+body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #333;
+    background: #fff;
+}
+
+/* ----- Buttons: pill shape + fill/hover-swap like the template's utility-chain buttons ----- */
+.btn {
+    border-radius: var(--radius-pill);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #222;
+}
+
+.btn-outline {
+    border: 1px solid var(--border-color);
+    background: #fff;
+    color: #333;
+}
+
+.btn-outline:hover:not(:disabled) {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: #fff;
+}
+
+.btn-buy-now {
+    background: #222;
+}
+
+.btn-buy-now:hover:not(:disabled) {
+    background: var(--color-primary);
+}
+
+.btn-google {
+    border-radius: var(--radius-pill);
+}
+
+.btn-icon {
+    border-radius: 50%;
+}
+
+/* ----- Forms / cards ----- */
+.form-control {
+    border-radius: var(--radius);
+    border-color: var(--border-color);
+    font-family: 'Poppins', sans-serif;
+}
+
+.form-control:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-soft);
+}
+
+.card {
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.badge {
+    font-family: 'Poppins', sans-serif;
+}
+
+.section-title,
+.page-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+}
+
+/* ===================== Header / topbar / nav ===================== */
+.site-topbar {
+    background: #222;
+    font-family: 'Poppins', sans-serif;
+}
+
+.site-header {
+    background: #fff;
+    color: #222;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: none;
+}
+
+.site-header-primary-inner {
+    padding: 1.35rem 1rem;
+    gap: 1rem;
+    align-items: center;
+}
+
+.site-logo {
+    max-height: 60px;
+}
+
+.mobile-menu-toggle,
+.site-brand,
+.site-header-action,
+.header-account .action-top,
+.header-account .action-main,
+.account-icon,
+.site-header-cart,
+.site-header-wishlist {
+    color: #222;
+}
+
+.site-brand,
+.site-header-action:hover,
+.site-header-cart:hover,
+.user-menu:hover .user-menu-trigger {
+    border-color: transparent;
+}
+
+.site-brand {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.6rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.site-header-action .action-top {
+    color: rgba(34, 34, 34, 0.65);
+}
+
+.site-search {
+    border-radius: var(--radius-pill);
+    background: #f2f2f2;
+    height: 50px;
+}
+
+.site-header-action,
+.user-menu-trigger.header-account {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.site-header-cart,
+.site-header-wishlist {
+    /* No vertical padding here — the badge is positioned absolutely off this
+       element's padding edge, so adding padding would push the icon down
+       without moving the badge, leaving a gap between them. Height/centering
+       comes from .site-header-primary-inner + align-items below instead. */
+    align-items: center;
+}
+
+.site-header-actions {
+    align-items: center;
+}
+
+/* Unify every header icon (menu toggle, search, account, wishlist, cart) to
+   the same square size and centered alignment, desktop and mobile alike. */
+.mobile-menu-toggle svg,
+.site-search-btn svg,
+.site-header-cart svg,
+.site-header-wishlist svg,
+.account-icon {
+    width: var(--header-icon-size);
+    height: var(--header-icon-size);
+}
+
+/* Re-anchor the count badges to the smaller, unified icon size (the app.css
+   defaults were tuned for a larger cart glyph). */
+.site-icon-count {
+    top: -4px;
+    right: -4px;
+}
+
+.site-header-cart .site-icon-count {
+    top: -4px;
+    left: 13px;
+    right: auto;
+}
+
+.site-search-input {
+    color: #333;
+}
+
+.site-search-btn {
+    background: transparent;
+    color: #222;
+    width: 46px;
+}
+
+.site-search-btn:hover {
+    color: var(--color-primary);
+    filter: none;
+}
+
+.site-header-secondary {
+    background: #222;
+}
+
+.site-header-secondary-inner {
+    padding: 0 0.5rem;
+}
+
+.site-nav a {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.85);
+    padding-top: 1.6rem;
+    padding-bottom: 1.6rem;
+}
+
+.site-nav a:hover,
+.site-nav a.active {
+    border-color: transparent;
+    color: var(--color-primary);
+}
+
+.site-icon-count {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+/* ===================== Footer ===================== */
+.site-footer {
+    background: #222;
+    color: rgba(255, 255, 255, 0.65);
+    border-top: none;
+}
+
+.site-footer-brand-name {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+}
+
+.site-footer-heading {
+    font-family: var(--font-eyebrow);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+}
+
+.site-footer-link:hover {
+    color: var(--color-primary);
+}
+
+.site-footer-social a {
+    border-radius: 50%;
+}
+
+.site-footer-social a:hover {
+    background: var(--color-primary);
+}
+
+/* ===================== Home: hero, trust bar, category, products ===================== */
+.hero-slider {
+    border-radius: 0;
+}
+
+.hero-slide-title {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.hero-slide-subtitle {
+    font-family: 'Poppins', sans-serif;
+}
+
+.hero-slide-btn {
+    border-radius: var(--radius-pill);
+    text-transform: uppercase;
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: 0.05em;
+}
+
+.trust-item {
+    border-radius: var(--radius);
+    box-shadow: none;
+}
+
+.trust-item svg {
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+}
+
+.trust-item-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+
+.home-panel-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.home-panel-link:hover {
+    color: var(--color-primary);
+}
+
+.category-tile {
+    border-radius: var(--radius);
+}
+
+.category-name {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.product-card,
+.deal-card {
+    border-radius: var(--radius);
+    border-color: var(--border-color);
+}
+
+.product-card:hover {
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+.product-card:hover .product-card-image {
+    transform: scale(1.06);
+}
+
+.product-card-image {
+    transition: transform 0.35s ease;
+}
+
+.product-card-category {
+    font-family: var(--font-eyebrow);
+    font-weight: 700;
+}
+
+.product-card-name,
+.deal-card-name {
+    font-family: 'Poppins', sans-serif;
+    color: #666;
+}
+
+.product-card-link:hover .product-card-name {
+    color: var(--color-primary);
+}
+
+.wishlist-btn,
+.wishlist-btn-card {
+    border-radius: 50%;
+}
+
+.wishlist-btn.active,
+.wishlist-btn-card.active {
+    color: var(--sale-badge);
+    border-color: var(--sale-badge);
+}
+
+.wishlist-btn.active svg,
+.wishlist-btn-card.active svg {
+    fill: var(--sale-badge);
+}
+
+.stars-fill {
+    color: var(--star);
+}
+
+.price,
+.product-card-price {
+    color: #333;
+    font-family: 'Poppins', sans-serif;
+}
+
+.price-off,
+.deal-card-badge,
+.deal-card-tag {
+    background: var(--sale-badge);
+    color: #fff;
+}
+
+/* ===================== Shop / category listing ===================== */
+.shop-rail,
+.shop-toolbar {
+    border-radius: var(--radius);
+    background: #f9f9f9;
+    border-color: var(--border-color);
+}
+
+.shop-rail-title {
+    font-family: 'Poppins', sans-serif;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+}
+
+.shop-facet-link:hover,
+.shop-facet-link.active,
+.shop-clear {
+    color: var(--color-primary);
+}
+
+.pagination-link {
+    border-radius: 50%;
+}
+
+.pagination-link.is-current {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+/* ===================== Product detail ===================== */
+.pdp-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+}
+
+.pdp-category:hover,
+.pdp-rating-value {
+    color: var(--color-primary);
+}
+
+.qty-stepper {
+    border-radius: var(--radius-pill);
+    overflow: visible;
+    border-color: var(--border-color);
+}
+
+.qty-btn {
+    border-radius: 50%;
+    background: #fff;
+}
+
+.qty-btn:hover {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+.rating-stars,
+.star-filled {
+    color: var(--star);
+}
+
+.review-item-avatar {
+    background: var(--color-primary);
+    font-family: 'Poppins', sans-serif;
+}
+
+.review-form-box {
+    border-radius: var(--radius);
+}
+
+.star-rating-input label,
+.star-rating-input label:hover,
+.star-rating-input label:hover ~ label,
+.star-rating-input input:checked ~ label {
+    color: var(--star);
+}
+
+/* ===================== Cart / checkout / orders ===================== */
+.cart-panel,
+.order-summary,
+.buybox,
+.order-head-card,
+.order-card {
+    border-radius: var(--radius);
+    box-shadow: none;
+    border-color: var(--border-color);
+}
+
+.cart-panel-title {
+    font-family: var(--font-display);
+}
+
+.cart-row-name:hover {
+    color: var(--color-primary);
+}
+
+.cart-row-delete {
+    color: var(--sale-badge);
+}
+
+.cart-panel-foot strong,
+.order-summary-row.order-summary-grand-total {
+    color: var(--color-primary);
+}
+
+.order-summary-checkout-btn {
+    border-radius: var(--radius-pill);
+}
+
+.address-option,
+.payment-option {
+    border-radius: var(--radius);
+}
+
+.address-option:has(input:checked) {
+    border-color: var(--color-primary);
+    background: var(--color-primary-soft);
+}
+
+.link-add-address,
+.shop-clear {
+    color: var(--color-primary);
+}
+
+/* ===================== Auth / profile ===================== */
+.auth-card {
+    border-radius: var(--radius-lg);
+}
+
+.auth-card-links a:hover {
+    color: var(--color-primary);
+}
+
+.profile-hero {
+    background: linear-gradient(135deg, var(--color-primary) 0%, #222 100%);
+    border-radius: var(--radius);
+}
+
+.profile-avatar,
+.profile-avatar-edit {
+    color: var(--color-primary);
+}
+
+.profile-tab-btn.active {
+    background: var(--color-primary);
+    border-radius: var(--radius-pill);
+}
+
+.profile-tab-btn:hover {
+    background: var(--color-primary-soft);
+}
+
+/* ===================== Static pages: about / contact / faq ===================== */
+.faq-item {
+    border-radius: var(--radius);
+}
+
+.faq-question {
+    font-family: 'Poppins', sans-serif;
+}
+
+.contact-info-item svg {
+    color: var(--color-primary);
+}
+
+.social-badge {
+    border-radius: 50%;
+}
+
+.social-badge-link:hover .social-badge {
+    background: var(--color-primary);
+}
+
+/* ===================== Mobile header: only cart + user icon stay in the row;
+   search and wishlist move into the hamburger menu popup instead ===================== */
+@media (max-width: 640px) {
+    .site-header-primary-inner {
+        flex-wrap: nowrap;
+        padding: 5px;
+    }
+
+    .mobile-menu-toggle {
+        display: none;
+    }
+
+    /* Search box lives in the mobile nav popup now — don't reserve row space for it. */
+    .site-search {
+        display: none;
+    }
+
+    .site-header-actions {
+        margin-left: auto;
+        gap: 0;
+    }
+
+    /* Wishlist and the Orders shortcut move out of the row; wishlist reappears
+       inside the nav popup (.site-nav-wishlist-link) and Orders is still one
+       tap away inside the account/user menu. */
+    .site-header-wishlist,
+    .site-header-action.orders {
+        display: none;
+    }
+
+    .header-account,
+    .account-link,
+    .site-header-cart {
+        padding-left: 0.4rem;
+        padding-right: 0.4rem;
+    }
+
+    /* Account icon sits alone on mobile (text hidden) — center it like the
+       cart/wishlist icons instead of the desktop column/left-aligned layout.
+       Matches app.css's ".user-menu-trigger.header-account" specificity so
+       it actually wins here, without touching the desktop rule. */
+    .user-menu-trigger.header-account,
+    .account-link {
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* The popup nav sits on a white sheet, not the dark desktop bar — force
+       readable dark text/uppercase-off styling regardless of the unconditional
+       ".site-nav a" rule above. */
+    .site-nav a {
+        color: #222;
+        text-transform: none;
+        letter-spacing: normal;
+        font-weight: 500;
+    }
+
+    .site-nav a:hover,
+    .site-nav a.active {
+        color: var(--color-primary);
+    }
+
+    /* Search box duplicated inside the mobile nav popup */
+    .site-nav-search {
+        display: flex;
+        align-items: stretch;
+        order: -2;
+        height: 46px;
+        margin: 0.75rem 0 0.5rem;
+        background: #f2f2f2;
+        border-radius: var(--radius-pill);
+        overflow: hidden;
+    }
+
+    .site-nav-search input {
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        background: none;
+        padding: 0 1rem;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.95rem;
+        color: #333;
+        outline: none;
+    }
+
+    .site-nav-search button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        border: 0;
+        background: none;
+        color: #222;
+        cursor: pointer;
+    }
+
+    /* Wishlist link duplicated inside the mobile nav popup */
+    .site-nav-wishlist-link {
+        order: 10;
+        display: flex !important;
+        align-items: center;
+        gap: 0.6rem;
+        position: relative;
+    }
+
+    .site-nav-search button svg,
+    .site-nav-wishlist-link svg {
+        width: var(--header-icon-size);
+        height: var(--header-icon-size);
+    }
+
+    .site-nav-wishlist-link .site-icon-count {
+        position: static;
+        margin-left: 0.25rem;
+        box-shadow: none;
+    }
+}
+
+/* Both hidden on desktop by default — mobile-only duplicates of search/wishlist
+   that live in the nav popup (shown by the media query above).
+   ".site-nav-wishlist-link" needs to beat app.css's ".site-nav a" rule (which
+   sets display:inline-flex and outranks a lone class selector on specificity),
+   otherwise the link — and its absolutely-positioned count badge — leaks
+   through and renders detached from the header on desktop. */
+.site-nav-search {
+    display: none;
+}
+
+.site-nav a.site-nav-wishlist-link {
+    display: none;
+    position: relative;
+}

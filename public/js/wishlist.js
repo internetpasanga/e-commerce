@@ -21,15 +21,16 @@
     }
 
     function updateWishlistCount(count) {
-        var badge = document.getElementById('wishlist-count');
-        if (!badge) {
-            return;
-        }
-        badge.textContent = count;
-        badge.style.display = count > 0 ? 'flex' : 'none';
-        badge.classList.remove('is-bumping');
-        void badge.offsetWidth;
-        badge.classList.add('is-bumping');
+        // More than one badge can exist on the page at once (header +
+        // mobile menu popup), keep them all in sync.
+        var badges = document.querySelectorAll('.wishlist-count-badge');
+        badges.forEach(function (badge) {
+            badge.textContent = count;
+            badge.style.display = count > 0 ? 'flex' : 'none';
+            badge.classList.remove('is-bumping');
+            void badge.offsetWidth;
+            badge.classList.add('is-bumping');
+        });
     }
 
     function reloadWishlist() {
