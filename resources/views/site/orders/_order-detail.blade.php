@@ -24,10 +24,11 @@
                         $progressKeys = array_keys($progressSteps);
                         $currentStepIndex = array_search($order->status, $progressKeys);
                         $currentStepIndex = $currentStepIndex === false ? 0 : $currentStepIndex;
+                        $isDelivered = $order->status === 'delivered';
                     @endphp
                     <ol class="order-progress-bar">
                         @foreach ($progressSteps as $stepKey => $stepLabel)
-                            <li class="order-progress-step {{ $loop->index < $currentStepIndex ? 'is-done' : ($loop->index === $currentStepIndex ? 'is-active' : 'is-upcoming') }}">
+                            <li class="order-progress-step {{ $loop->index < $currentStepIndex || ($isDelivered && $loop->index === $currentStepIndex) ? 'is-done' : ($loop->index === $currentStepIndex ? 'is-active' : 'is-upcoming') }}">
                                 <span class="order-progress-icon">
                                     @switch($stepKey)
                                         @case('pending')
