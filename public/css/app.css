@@ -5220,6 +5220,160 @@ td.text-right, th.text-right {
     margin: 0.2rem 0 0;
 }
 
+.order-timeline-count {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--box-info);
+    background: color-mix(in srgb, var(--box-info) 12%, transparent);
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.order-timeline-item.is-upcoming .order-timeline-marker {
+    color: var(--adminlte-muted, var(--text-muted));
+    border-color: var(--adminlte-border, var(--border-color));
+}
+
+.order-timeline-item.is-upcoming .order-timeline-status {
+    color: var(--adminlte-muted, var(--text-muted));
+}
+
+.order-timeline-date-pending {
+    font-style: italic;
+    color: var(--adminlte-muted, var(--text-muted));
+}
+
+/* ===== Order status progress bar ===== */
+.order-progress-bar {
+    display: flex;
+    list-style: none;
+    margin: 0.5rem 0 0.25rem;
+    padding: 0;
+}
+
+.order-progress-step {
+    position: relative;
+    flex: 1;
+    text-align: center;
+}
+
+.order-progress-step:not(:first-child)::before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    top: 19px;
+    left: -50%;
+    width: 100%;
+    height: 3px;
+    background: var(--adminlte-border, var(--border-color));
+}
+
+.order-progress-step.is-done:not(:first-child)::before {
+    background: var(--box-success);
+}
+
+.order-progress-icon {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    margin: 0 auto 0.5rem;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--adminlte-border, var(--border-color));
+    color: var(--adminlte-muted, var(--text-muted));
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.order-progress-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.order-progress-step.is-done .order-progress-icon {
+    background: var(--box-success);
+    border-color: var(--box-success);
+    color: #fff;
+}
+
+.order-progress-step.is-active .order-progress-icon {
+    background: var(--box-info);
+    border-color: var(--box-info);
+    color: #fff;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--box-info) 20%, transparent);
+}
+
+.order-progress-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--adminlte-muted, var(--text-muted));
+}
+
+.order-progress-step.is-done .order-progress-label,
+.order-progress-step.is-active .order-progress-label {
+    color: var(--adminlte-heading, #111827);
+}
+
+.order-progress-cancelled {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.order-progress-cancelled-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--box-danger);
+    color: #fff;
+}
+
+.order-progress-cancelled-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.order-progress-cancelled-title {
+    margin: 0;
+    font-weight: 700;
+    color: var(--adminlte-heading, #111827);
+}
+
+.order-progress-cancelled-sub {
+    margin: 0.1rem 0 0;
+    font-size: 0.85rem;
+    color: var(--adminlte-muted, var(--text-muted));
+}
+
+@media (max-width: 480px) {
+    .order-progress-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .order-progress-icon svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .order-progress-step:not(:first-child)::before {
+        top: 15px;
+    }
+
+    .order-progress-label {
+        font-size: 0.68rem;
+    }
+}
+
 /* FAQ accordion */
 .faq-list {
     max-width: 800px;

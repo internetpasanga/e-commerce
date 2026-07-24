@@ -1,6 +1,58 @@
 <div class="order-detail-layout">
     <div class="order-detail-main">
         <section class="card card-flush">
+            <div class="card-header"><h2 class="card-title">Order Status</h2></div>
+            <div class="card-body">
+                @if ($order->status === 'cancelled')
+                    <div class="order-progress-cancelled">
+                        <span class="order-progress-cancelled-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6"/><path d="M9 9l6 6"/></svg>
+                        </span>
+                        <div>
+                            <p class="order-progress-cancelled-title">Order Cancelled</p>
+                            <p class="order-progress-cancelled-sub">This order will not be processed further.</p>
+                        </div>
+                    </div>
+                @else
+                    @php
+                        $progressSteps = [
+                            'pending' => 'Order Placed',
+                            'processing' => 'Processing',
+                            'shipped' => 'Shipped',
+                            'delivered' => 'Delivered',
+                        ];
+                        $progressKeys = array_keys($progressSteps);
+                        $currentStepIndex = array_search($order->status, $progressKeys);
+                        $currentStepIndex = $currentStepIndex === false ? 0 : $currentStepIndex;
+                    @endphp
+                    <ol class="order-progress-bar">
+                        @foreach ($progressSteps as $stepKey => $stepLabel)
+                            <li class="order-progress-step {{ $loop->index < $currentStepIndex ? 'is-done' : ($loop->index === $currentStepIndex ? 'is-active' : 'is-upcoming') }}">
+                                <span class="order-progress-icon">
+                                    @switch($stepKey)
+                                        @case('pending')
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                                            @break
+                                        @case('processing')
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.73Z"/><path d="M3.3 7 12 12l8.7-5"/><path d="M12 22V12"/></svg>
+                                            @break
+                                        @case('shipped')
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>
+                                            @break
+                                        @case('delivered')
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                                            @break
+                                    @endswitch
+                                </span>
+                                <span class="order-progress-label">{{ $stepLabel }}</span>
+                            </li>
+                        @endforeach
+                    </ol>
+                @endif
+            </div>
+        </section>
+
+        <section class="card card-flush">
             <div class="card-header"><h2 class="card-title">Order Items</h2></div>
             <div class="table-wrap" style="box-shadow: none;">
                 <table class="order-items-table">
@@ -27,38 +79,96 @@
         </section>
 
         <section class="card card-flush">
-            <div class="card-header"><h2 class="card-title">Order Tracking</h2></div>
+            @php
+                $trackingSteps = ['pending', 'processing', 'shipped', 'delivered'];
+                $trackingLabels = [
+                    'pending' => 'Order Placed',
+                    'processing' => 'Processing',
+                    'shipped' => 'Shipped',
+                    'delivered' => 'Delivered',
+                ];
+                $trackingCurrentIndex = array_search($order->status, $trackingSteps);
+                $trackingHistoryByStatus = $order->statusHistories->keyBy('status');
+                $trackingCompletedCount = $trackingCurrentIndex === false ? 0 : $trackingCurrentIndex + 1;
+            @endphp
+            <div class="card-header">
+                <h2 class="card-title">Order Tracking</h2>
+                @if ($order->status === 'cancelled')
+                    <span class="badge badge-danger">Cancelled</span>
+                @else
+                    <span class="order-timeline-count">{{ $trackingCompletedCount }} of {{ count($trackingSteps) }} steps completed</span>
+                @endif
+            </div>
             <div class="card-body">
-                <ol class="order-timeline">
-                    @foreach ($order->statusHistories as $history)
-                        @php
-                            $tlColor = match ($history->status) {
-                                'delivered' => 'var(--box-success)',
-                                'processing', 'shipped' => 'var(--box-info)',
-                                'cancelled' => 'var(--box-danger)',
-                                default => 'var(--box-warning)',
-                            };
-                        @endphp
-                        <li class="order-timeline-item {{ $loop->first ? 'is-current' : '' }}" style="--tl-color: {{ $tlColor }};">
-                            <span class="order-timeline-marker">
-                                @if ($history->status === 'cancelled')
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>
-                                @else
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                                @endif
-                            </span>
-                            <div class="order-timeline-content">
-                                <div class="order-timeline-head">
-                                    <span class="order-timeline-status">{{ ucfirst($history->status) }}</span>
-                                    <span class="order-timeline-date">{{ $history->created_at->format('d M Y, h:i A') }}</span>
+                @if ($order->status === 'cancelled')
+                    <ol class="order-timeline">
+                        @foreach ($order->statusHistories as $history)
+                            @php
+                                $tlColor = match ($history->status) {
+                                    'delivered' => 'var(--box-success)',
+                                    'processing', 'shipped' => 'var(--box-info)',
+                                    'cancelled' => 'var(--box-danger)',
+                                    default => 'var(--box-warning)',
+                                };
+                            @endphp
+                            <li class="order-timeline-item {{ $loop->first ? 'is-current' : '' }}" style="--tl-color: {{ $tlColor }};">
+                                <span class="order-timeline-marker">
+                                    @if ($history->status === 'cancelled')
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>
+                                    @else
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                                    @endif
+                                </span>
+                                <div class="order-timeline-content">
+                                    <div class="order-timeline-head">
+                                        <span class="order-timeline-status">{{ ucfirst($history->status) }}</span>
+                                        <span class="order-timeline-date">{{ $history->created_at->format('d M Y, h:i A') }}</span>
+                                    </div>
+                                    @if ($history->note)
+                                        <p class="order-timeline-note">{{ $history->note }}</p>
+                                    @endif
                                 </div>
-                                @if ($history->note)
-                                    <p class="order-timeline-note">{{ $history->note }}</p>
-                                @endif
-                            </div>
-                        </li>
-                    @endforeach
-                </ol>
+                            </li>
+                        @endforeach
+                    </ol>
+                @else
+                    <ol class="order-timeline">
+                        @foreach ($trackingSteps as $index => $statusKey)
+                            @php
+                                $history = $trackingHistoryByStatus->get($statusKey);
+                                $isReached = $trackingCurrentIndex !== false && $index <= $trackingCurrentIndex;
+                                $isCurrent = $index === $trackingCurrentIndex;
+                                $tlColor = match ($statusKey) {
+                                    'delivered' => 'var(--box-success)',
+                                    'processing', 'shipped' => 'var(--box-info)',
+                                    default => 'var(--box-warning)',
+                                };
+                            @endphp
+                            <li class="order-timeline-item {{ $isCurrent ? 'is-current' : '' }} {{ $isReached ? '' : 'is-upcoming' }}" style="--tl-color: {{ $isReached ? $tlColor : 'var(--adminlte-border, var(--border-color))' }};">
+                                <span class="order-timeline-marker">
+                                    @if ($isReached)
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                                    @else
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/></svg>
+                                    @endif
+                                </span>
+                                <div class="order-timeline-content">
+                                    <div class="order-timeline-head">
+                                        <span class="order-timeline-status">{{ $trackingLabels[$statusKey] }}</span>
+                                        @if ($history)
+                                            <span class="order-timeline-date">{{ $history->created_at->format('d M Y, h:i A') }}</span>
+                                        @else
+                                            <span class="order-timeline-date order-timeline-date-pending">Pending</span>
+                                        @endif
+                                    </div>
+                                    @if ($history && $history->note)
+                                        <p class="order-timeline-note">{{ $history->note }}</p>
+                                    @endif
+                                </div>
+                            </li>
+                        @endforeach
+                    </ol>
+                @endif
             </div>
         </section>
     </div>
